@@ -1,29 +1,33 @@
+/*-----------------
+  startup functions
+  -----------------*/
+
 Cards = new Mongo.Collection("cards");
 
-Meteor.startup(function () {
-  currentFocus = null //the textarea focus on
-  currentEnabled = null
-  enabledTriangle = null
+Meteor.startup(function () { //the document is loaded
+  currentFocus = null //the textarea currently focused
+  currentEnabled = null //the currently enabled textarea
+  enabledTriangle = null //the currently enabled triangle
   Session.set("document_loaded", true);
 });
 
 Meteor.subscribe('Cards', function(){ //runs when Cards is finished publishing
-   //Set the reactive session as true to indicate that the data have been loaded
    Session.set('cards_loaded', true); 
 });
 
-Tracker.autorun(function(c){
+Tracker.autorun(function(c){ //check whether the document and database are loaded
   var cardsLoaded = Session.get('cards_loaded');
   var documentLoaded = Session.get('document_loaded');
   if(!(cardsLoaded && documentLoaded 
     && typeof Cards !== 'undefined'
     && typeof document.body !== 'undefined'))
     return;
-  c.stop();
+  //both are loaded
+  c.stop(); //stop the tracker
   console.log("loading previous cards")
   var cards = Cards.find().fetch();
   cards.forEach(function (card) {
-    drawNoteCard(card._id,card.locationX,card.locationY);
+    drawNoteCard(card._id,card.locationX,card.locationY); //draw all the cards
   });
 });
 
@@ -34,6 +38,10 @@ Template.body.events({ //events on the page body
     makeNewNoteCard();
   }
 });
+
+/*--------------
+  card functions
+  --------------*/
 
 var makeNewNoteCard = function(locationX,locationY) {
   var cardId = Cards.insert({
@@ -46,27 +54,28 @@ var makeNewNoteCard = function(locationX,locationY) {
 }
 
 var drawNoteCard = function(cardId, locationX, locationY) {
+  //set defaults for location variables
   var locationX = typeof locationX !== 'undefined' ? locationX   : 25;
   var locationY = typeof locationY !== 'undefined' ? locationY   : 25;
-  var renderedNoteCard = document.createElement("div");
-  document.body.appendChild(renderedNoteCard);
-  UI.renderWithData(Template.notecard,"hi",renderedNoteCard);
-  var noteCard = document.body.lastChild;
+
+  var noteCard = document.createElement("div"); //make a noteCard (it's just a div now)
+  document.body.appendChild(noteCard); //add the div to the document
+  UI.renderWithData(Template.notecard,"hi",noteCard); //add notecard template
+  noteCard.id = cardId; //hold id for updates
   $(noteCard).pep({ //add pep to notecard
     constrainTo: 'window',
     elementsWithInteraction: 'textarea',
-    //detects mouseUp
     startPos: {
       left: locationX,
       top: locationY
     },
-    stop: (function(ev) {
-      var position = $(noteCard).position();
-      console.log("position of notecard is now " + position.left + ", " + position.top)
-      Cards.update(cardId, {
-        $set: {locationX: position.left,
-               locationY: position.top}
+    rest: (function(ev) {
+      Cards.update(cardId, { //set position in database
+        $set: {locationX: $(noteCard).position().left,
+               locationY: $(noteCard).position().top}
       });
+    }),
+    stop: (function(ev) {
       //if mouseup when drag has not started
       if (!this.started) {
         point = FindLocationOnObject(ev);
