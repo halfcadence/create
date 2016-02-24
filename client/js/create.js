@@ -8,6 +8,10 @@ Meteor.startup(function () { //the document is loaded
   currentFocus = null //the textarea currently focused
   currentEnabled = null //the currently enabled textarea
   enabledTriangle = null //the currently enabled triangle
+
+  //workaround for not being able to find current notecard
+  //from inside pep events
+  LastEnabledNotecard = null
   maxZIndex = 0
   Session.set("document_loaded", true);
 });
@@ -29,7 +33,7 @@ Tracker.autorun(function(c){ //check whether the document and database are loade
     return;
   //both are loaded
   c.stop(); //stop the tracker
-  console.log("loading previous cards")
+  console.log("loading cards from database")
   var cards = Cards.find().fetch();
   cards.forEach(function (card) {
     drawNoteCard(card._id,card.locationX,card.locationY,card.title, card.body, card.body2, card.position); //draw all the cards
@@ -135,13 +139,11 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
         else if (point.y >= 200 && point.x >= 400) {
           //slide left
           slide(noteCard,"left");
-          console.log("sliding left from pep")
         } //rightTriangle clicked when body is not focused
         else if (point.y >= 200 && point.x <= 100) {
           slide(noteCard, "right");
-          console.log("sliding right from pep")
         } else { //click in body which is disabled
-          console.log("position: " + noteCard.position)
+          LastEnabledNotecard = noteCard;
           if (noteCard.position === "left") { //client view
             setCurrentEnabled($(noteCard).find(".bodyText"));
             focusDescriptionAndEnableLeftTriangle(noteCard);
@@ -204,6 +206,22 @@ Template.notecard.events({
     Cards.update(template.data.id, { //set position in database
         $set: {body2: text}
       });
+  },
+  'click .leftTriangle': function (event,template) {
+    // Prevent default browser form submit
+    event.preventDefault();
+    slide(LastEnabledNotecard,"left")
+    //enable and focus implementation
+    setCurrentEnabled($(LastEnabledNotecard).find(".bodyText2"))
+    focusImplementationAndEnableRightTriangle(LastEnabledNotecard);
+  },
+  'click .rightTriangle': function (event,template) {
+    // Prevent default browser form submit
+    event.preventDefault();
+    slide(LastEnabledNotecard,"right")
+    //enable and focus implementation
+    setCurrentEnabled($(LastEnabledNotecard).find(".bodyText"))
+    focusDescriptionAndEnableLeftTriangle(LastEnabledNotecard);
   }
   //click buttons are broken bc they want reference to notecard as well
   //click left right will go here eventually:
