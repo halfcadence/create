@@ -134,16 +134,13 @@ body {
   right: 12px;
   background:$dark-card-color;
   pointer-events:none;
-  
   width: 50px;
   height: 50px;
   border-radius: 50%;
-	//border:40px solid $dark-card-color;
   overflow:hidden;
     
   background-color: $dark-card-color; 
 }
-
 .rightTriangle {
   position:absolute;
   border:none;
@@ -154,8 +151,7 @@ body {
   pointer-events:none;
   width: 50px;
   height: 50px;
-  //border-radius: 50%;
-	//border:40px solid $dark-card-color;
+  border-radius: 50%;
   overflow:hidden;
     
   background-color: $card-background-color; 

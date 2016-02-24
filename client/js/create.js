@@ -8,6 +8,7 @@ Meteor.startup(function () { //the document is loaded
   currentFocus = null //the textarea currently focused
   currentEnabled = null //the currently enabled textarea
   enabledTriangle = null //the currently enabled triangle
+  maxZIndex = 0
   Session.set("document_loaded", true);
 });
 
@@ -103,6 +104,9 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
     startPos: {
       left: locationX,
       top: locationY
+    },
+    initiate: function() {
+      goToTop(noteCard);
     },
     rest: (function(ev) {
       Cards.update(cardId, { //set position in database
