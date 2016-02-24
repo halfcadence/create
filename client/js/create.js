@@ -27,15 +27,14 @@ Tracker.autorun(function(c){ //check whether the document and database are loade
   console.log("loading previous cards")
   var cards = Cards.find().fetch();
   cards.forEach(function (card) {
-    drawNoteCard(card._id,card.locationX,card.locationY); //draw all the cards
+    drawNoteCard(card._id,card.locationX,card.locationY,card.title); //draw all the cards
   });
 });
 
 Template.body.events({ //events on the page body
   "click button.blue": function (event) { //click on new button
     event.preventDefault(); // Prevent default browser form submit
-    //var noteCard = new Notecard(); //make new notecard
-    makeNewNoteCard();
+    makeNewNoteCard(undefined,undefined,""); //make a new empty notecard
   }
 });
 
@@ -43,25 +42,35 @@ Template.body.events({ //events on the page body
   card functions
   --------------*/
 
-var makeNewNoteCard = function(locationX,locationY) {
+var makeNewNoteCard = function(locationX,locationY,title) {
+  var locationX = typeof locationX !== 'undefined' ? locationX   : 195;
+  var locationY = typeof locationY !== 'undefined' ? locationY   : 25;
+  var title = typeof title !== 'undefined' ? title   : "";
+
   var cardId = Cards.insert({
-        title: "title",// current time
-        locationX:  195,
-        locationY: 25
+        title: title,// current time
+        locationX:  locationX,
+        locationY: locationY
   });
-  console.log("id of the card: " + cardId);
-  drawNoteCard(cardId,locationX,locationY);
+  drawNoteCard(cardId,locationX,locationY,title);
 }
 
-var drawNoteCard = function(cardId, locationX, locationY) {
+var drawNoteCard = function(cardId, locationX, locationY, title) {
   //set defaults for location variables
-  var locationX = typeof locationX !== 'undefined' ? locationX   : 25;
+  var locationX = typeof locationX !== 'undefined' ? locationX   : 195;
   var locationY = typeof locationY !== 'undefined' ? locationY   : 25;
 
   var noteCard = document.createElement("div"); //make a noteCard (it's just a div now)
   document.body.appendChild(noteCard); //add the div to the document
-  UI.renderWithData(Template.notecard,"hi",noteCard); //add notecard template
+  UI.renderWithData(Template.notecard,{id : cardId},noteCard); //add notecard template
+  // note: i'm putting the id in the template as well as the outer div 
+  // because i don't know how to get the id from inside the template's events
+
+  if (title !== 'undefined')
+    $(noteCard).find(".titleText").val(title); //set title if argument given
   noteCard.id = cardId; //hold id for updates
+  console.log(noteCard.id)
+  console.log("notecard's pep: " + $(noteCard).find('.pep'))
   $(noteCard).pep({ //add pep to notecard
     constrainTo: 'window',
     elementsWithInteraction: 'textarea',
@@ -74,6 +83,18 @@ var drawNoteCard = function(cardId, locationX, locationY) {
         $set: {locationX: $(noteCard).position().left,
                locationY: $(noteCard).position().top}
       });
+      var position = $(noteCard).position();
+      console.log("position: " + position.left + ", " + position.top)
+      var delposition = $('button.red').position()
+      bottom =  delposition.left - position.left;
+      right = delposition.top - position.top;
+            console.log("distance from button red: " + bottom + ", " + right)
+
+      if (bottom <= 350 && right <= 25) {
+        Cards.remove({_id : noteCard.id})
+        $(noteCard).remove();
+        noteCard = null;
+      }
     }),
     stop: (function(ev) {
       //if mouseup when drag has not started
@@ -89,18 +110,35 @@ var drawNoteCard = function(cardId, locationX, locationY) {
 }
 
 Template.notecard.onCreated(function() {
-  console.log("created notecard")
-  this.titleText = new ReactiveVar("what");
+  this.titleText = new ReactiveVar("");
 });
 
-Template.registerHelper('instance', function() {
-  return Template.instance();
+Template.notecard.events({
+  'input .titleText, change .titleText, keyup .titleText, mouseup .titleText': function (event,template) {
+    // Prevent default browser form submit
+    event.preventDefault();
+
+    //Get value from form element
+    //var text = event.target.titleText.value;
+    var text = event.target.value;
+    console.log("text in title box: " + text);
+    // Insert a task into the collection
+    template.titleText.set(text); //set reactive var to new value
+    //somehow store in database
+    Cards.update(template.data.id, { //set position in database
+        $set: {title: text}
+      });
+  }
 });
+
 
 /*----------------
   helper functions
   ----------------*/
 
+Template.registerHelper('instance', function() {
+  return Template.instance();
+});
 var setCurrentEnabled = function(object) {
     disableCurrentEnabled()
     currentEnabled = object;
