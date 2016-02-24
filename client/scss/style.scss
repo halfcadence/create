@@ -24,7 +24,10 @@ $light: 100;
   font-weight: $light;
   color: $font-color;
 }
-
+body {
+  width: 100%;
+  height: 100%;
+}
 ::selection {
   background: $highlight-color;
 }
