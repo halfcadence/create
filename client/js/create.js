@@ -51,7 +51,6 @@ UI.body.events({ //events on the page body
 
 //temp solution since i can't get it to work with meteor
 $(document).on('click', function(event) {
-  console.log("click on document body")
   if (!$(event.target).closest('.pep').length) //if the target was not a pep
     disableCurrentEnabled();
 });
@@ -60,13 +59,13 @@ $(document).on('click', function(event) {
   card functions
   --------------*/
 
-var makeNewNoteCard = function(locationX,locationY,title,body, body2, position) {
+var makeNewNoteCard = function(locationX,locationY,title,body,body2,position) {
   var locationX = typeof locationX !== 'undefined' ? locationX   : 195;
   var locationY = typeof locationY !== 'undefined' ? locationY   : 25;
   var title = typeof title !== 'undefined' ? title   : "";
   var body = typeof body !== 'undefined' ? body   : "";
   var body2 = typeof body2 !== 'undefined' ? body2   : "";
-  var position = typeof position !== 'undefined' ? position   : "left";
+  var position = typeof position !== 'undefined' ? position : "left";
 
   var cardId = Cards.insert({
         title: title,
@@ -83,7 +82,7 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
   //set defaults for location variables
   var locationX = typeof locationX !== 'undefined' ? locationX   : 195;
   var locationY = typeof locationY !== 'undefined' ? locationY   : 25;
-
+  var position = typeof position !== 'undefined' ? position : "left";
   var noteCard = document.createElement("div"); //make a noteCard (it's just a div now)
   document.body.appendChild(noteCard); //add the div to the document
   UI.renderWithData(Template.notecard,{id : cardId},noteCard); //add notecard template
@@ -97,6 +96,7 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
   if (body2 !== 'undefined')
     $(noteCard).find(".bodyText2").val(body2); //set body2 if argument given
   noteCard.id = cardId; //hold id for updates
+  noteCard.position = position;
   $(noteCard).pep({ //add pep to notecard
     constrainTo: 'window',
     elementsWithInteraction: 'textarea',
@@ -110,7 +110,6 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
                locationY: $(noteCard).position().top}
       });
       var position = $(noteCard).position();
-      console.log("position: " + position.left + ", " + position.top)
       var delposition = $('button.red').position()
       bottom =  delposition.left - position.left;
       right = delposition.top - position.top;
@@ -128,9 +127,24 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
         if (point.y <= 100) { //clicked title
           setCurrentEnabled($(noteCard).find(".titleText"))
           focusOn($(noteCard).find(".titleText"))
+        } //leftTriangle clicked when body is not focused
+        else if (point.y >= 200 && point.x >= 400) {
+          //slide left
+          slide(noteCard,"left");
+          console.log("sliding left from pep")
+        } //rightTriangle clicked when body is not focused
+        else if (point.y >= 200 && point.x <= 100) {
+          slide(noteCard, "right");
+          console.log("sliding right from pep")
         } else { //click in body which is disabled
-          setCurrentEnabled($(noteCard).find(".bodyText2"));
-          focusOn($(noteCard).find(".bodyText2"));
+          console.log("position: " + noteCard.position)
+          if (noteCard.position === "left") { //client view
+            setCurrentEnabled($(noteCard).find(".bodyText"));
+            focusDescriptionAndEnableLeftTriangle(noteCard);
+          } else { //developer view
+            setCurrentEnabled($(noteCard).find(".bodyText2"));
+            focusImplementationAndEnableRightTriangle(noteCard);
+          }
         }
       }
     })
@@ -187,6 +201,23 @@ Template.notecard.events({
         $set: {body2: text}
       });
   }
+  //click buttons are broken bc they want reference to notecard as well
+  //click left right will go here eventually:
+  /*
+  $(noteCard.leftTriangle).on('click', function() {
+    noteCard.slide("left")
+    //enable and focus implementation
+    setCurrentEnabled(noteCard.implementation);
+    noteCard.focusImplementationAndEnableRightTriangle();
+  });
+
+  $(noteCard.rightTriangle).on('click', function() {
+    noteCard.slide("right")
+      //enable and focus implementation
+    setCurrentEnabled(noteCard.description);
+    noteCard.focusDescriptionAndEnableLeftTriangle();
+  });
+  */
 });
 
 var goToTop = function(notecard) {
@@ -202,7 +233,7 @@ var slide = function(notecard, direction) {
 
   } else if (direction === "right") {
     $(notecard).find(".bodyText2").css('left', 500);
-    this.position = "left"; //left element showing
+    notecard.position = "left"; //left element showing
     Cards.update(notecard.id, { //set position in database
         $set: {position: "left"}
       });
@@ -235,11 +266,9 @@ var setCurrentEnabled = function(object) {
   //enables and disables pointer-events
 var enable = function(object) {
   $(object).css('pointer-events', 'auto');
-  //$(object).css('background-color', 'red');
 }
 var disable = function(object) {
   $(object).css('pointer-events', 'none');
-  //$(object).css('background-color', 'yellow');
 }
 var focusOn = function(newFocus) {
     newFocus.focus();
@@ -253,9 +282,9 @@ var unFocus = function() {
 }
 var disableCurrentEnabled = function() {
     if (currentEnabled != null) {
-      //if (!$(currentEnabled).hasClass('bodyText || bodyText2')) {
-        //disable(enabledTriangle)
-      //}
+      if (!$(currentEnabled).hasClass('bodyText || bodyText2')) {
+        disable(enabledTriangle)
+      }
       disable(currentEnabled)
       currentEnabled = null
     }
