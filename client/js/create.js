@@ -27,13 +27,13 @@ Meteor.subscribe('Cards', function(){ //runs when Cards is finished publishing
 Tracker.autorun(function(c){ //check whether the document and database are loaded
   var cardsLoaded = Session.get('cards_loaded');
   var documentLoaded = Session.get('document_loaded');
+  console.log(cardsLoaded + " " + documentLoaded);
   if(!(cardsLoaded && documentLoaded 
     && typeof Cards !== 'undefined'
     && typeof document.body !== 'undefined'))
     return;
   //both are loaded
   c.stop(); //stop the tracker
-  console.log("loading cards from database")
   var cards = Cards.find().fetch();
   cards.forEach(function (card) {
     drawNoteCard(card._id,card.locationX,card.locationY,card.title, card.body, card.body2, card.position); //draw all the cards
@@ -113,22 +113,23 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
       goToTop(noteCard);
     },
     rest: (function(ev) {
+      //here we don't catch the possible null reference because it's just a waste of time
       Cards.update(cardId, { //set position in database
         $set: {locationX: $(noteCard).position().left,
                locationY: $(noteCard).position().top}
       });
+    }),
+    stop: (function(ev) {
       var position = $(noteCard).position();
       var delposition = $('button.red').position()
       bottom =  delposition.left - position.left;
       right = delposition.top - position.top;
-
       if (bottom <= 350 && right <= 25) {
         Cards.remove({_id : noteCard.id})
         $(noteCard).remove();
         noteCard = null;
+        return;
       }
-    }),
-    stop: (function(ev) {
       //if mouseup when drag has not started
       if (!this.started) {
         point = FindLocationOnObject(ev);
