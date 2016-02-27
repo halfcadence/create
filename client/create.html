@@ -4,21 +4,27 @@
   <script src='https://rawgithub.com/briangonzalez/jquery.pep.js/master/src/jquery.pep.js'></script>
 </head>
 
-<body>
-  <div class='create'>
-    <button class='blue'>
-      <span class='blue'>n<br>e<br>w</span>
-    </button>
-  </div>
-  <div class='del'>
-    <button class='red'>
-      <span class='red'>d<br>e<br>l</span>
-    </button>
-  </div>
-  {{#each notecard}}
-      {{> notecard}}
-  {{/each}}
-</body>
+<template name="home">
+    <div>Welcome to the create application.</div>
+</template>
+<template name="application">
+
+  <body>
+    <div class='create'>
+      <button class='blue'>
+        <span class='blue'>n<br>e<br>w</span>
+      </button>
+    </div>
+    <div class='del'>
+      <button class='red'>
+        <span class='red'>d<br>e<br>l</span>
+      </button>
+    </div>
+    {{#each notecard}}
+        {{> notecard}}
+    {{/each}}
+  </body>
+</template>
 
 <template name="notecard">
   <div class="pep">

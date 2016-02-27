@@ -1,8 +1,26 @@
 /*-----------------
   startup functions
   -----------------*/
+//forces application to wait for startup to run loading code
+finishedLoading = false;
 
 Cards = new Mongo.Collection("cards");
+
+Router.route('/', {
+    template: 'home'
+});
+
+Router.route('/project/:_id', function () {
+  console.log("loading project");
+  this.render('application');
+
+  console.log("setting project id to " + this.params._id);
+  projectId = this.params._id;
+  Meteor.subscribe('Cards', {"projectId": projectId},function(){
+     Session.set('cards_loaded', true);
+  });
+  Session.set("routed", true);
+});
 
 Meteor.startup(function () { //the document is loaded
   currentFocus = null //the textarea currently focused
@@ -20,17 +38,16 @@ $(window).resize(function(){
     window.resizeTo($(window).innerWidth,$(window).innerHeight);
 });
 
-Meteor.subscribe('Cards', function(){ //runs when Cards is finished publishing
-   Session.set('cards_loaded', true); 
-});
-
 Tracker.autorun(function(c){ //check whether the document and database are loaded
   var cardsLoaded = Session.get('cards_loaded');
   var documentLoaded = Session.get('document_loaded');
-  console.log(cardsLoaded + " " + documentLoaded);
-  if(!(cardsLoaded && documentLoaded 
-    && typeof Cards !== 'undefined'
-    && typeof document.body !== 'undefined'))
+  var routed = Session.get('routed');
+  console.log("cards loaded: " + cardsLoaded + ", documents loaded: " + documentLoaded + "routed: + " + routed);
+  //explicit callbacks to loaded
+  var finishedLoading = cardsLoaded && documentLoaded && routed;
+  //sanity check to make sure things are properly loaded
+  var loadingChecks = typeof Cards !== 'undefined' && typeof document.body !== 'undefined' && typeof projectId !== 'undefined';
+  if(!(finishedLoading && loadingChecks))
     return;
   //both are loaded
   c.stop(); //stop the tracker
@@ -40,17 +57,12 @@ Tracker.autorun(function(c){ //check whether the document and database are loade
   });
 });
 
-UI.body.events({ //events on the page body
+Template.application.events({ //events on the page body
   "click button.blue": function (event) { //click on new button
+    console.log("new button clicked, should make notecard");
     event.preventDefault(); // Prevent default browser form submit
     makeNewNoteCard(undefined,undefined,"", "", "", "left"); //make a new empty notecard
   }
-  /*
-  "click": function (event) {
-    console.log("click on document body")
-    if (!$(event.target).closest('.pep').length) //if the target was not a pep
-    disableCurrentEnabled();
-  }*/
 });
 
 
@@ -73,6 +85,7 @@ var makeNewNoteCard = function(locationX,locationY,title,body,body2,position) {
   var position = typeof position !== 'undefined' ? position : "left";
 
   var cardId = Cards.insert({
+        projectId: projectId,
         title: title,
         body: body,
         body2: body2,
@@ -91,7 +104,7 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
   var noteCard = document.createElement("div"); //make a noteCard (it's just a div now)
   document.body.appendChild(noteCard); //add the div to the document
   UI.renderWithData(Template.notecard,{id : cardId},noteCard); //add notecard template
-  // note: i'm putting the id in the template as well as the outer div 
+  // note: i'm putting the id in the template as well as the outer div
   // because i don't know how to get the id from inside the template's events
 
   if (title !== 'undefined')
@@ -114,6 +127,8 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
     },
     rest: (function(ev) {
       //here we don't catch the possible null reference because it's just a waste of time
+      if (!noteCard)
+        return;
       Cards.update(cardId, { //set position in database
         $set: {locationX: $(noteCard).position().left,
                locationY: $(noteCard).position().top}
