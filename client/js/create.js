@@ -16,10 +16,14 @@ Router.route('/project/:_id', function () {
 
   console.log("setting project id to " + this.params._id);
   projectId = this.params._id;
-  Meteor.subscribe('Cards', {"projectId": projectId},function(){
-     Session.set('cards_loaded', true);
-  });
+  Session.set('filter', {"projectId": projectId});
+  Tracker.autorun(function() {
+    Meteor.subscribe('Cards', Session.get('filter'), function(){
+      console.log("meteor subscribing");
+      Session.set('cards_loaded', true);
+    });
   Session.set("routed", true);
+  });
 });
 
 Meteor.startup(function () { //the document is loaded
@@ -53,7 +57,7 @@ Tracker.autorun(function(c){ //check whether the document and database are loade
   c.stop(); //stop the tracker
   var cards = Cards.find().fetch();
   cards.forEach(function (card) {
-    drawNoteCard(card._id,card.locationX,card.locationY,card.title, card.body, card.body2, card.position); //draw all the cards
+    drawNoteCard(card._id,card.locationX,card.locationY,card.title, card.body, card.body2, card.cost, card.priority, card.position); //draw all the cards
   });
 });
 
@@ -61,7 +65,7 @@ Template.application.events({ //events on the page body
   "click button.blue": function (event) { //click on new button
     console.log("new button clicked, should make notecard");
     event.preventDefault(); // Prevent default browser form submit
-    makeNewNoteCard(undefined,undefined,"", "", "", "left"); //make a new empty notecard
+    makeNewNoteCard(undefined,undefined,"", "", "", "", "", "left"); //make a new empty notecard
   }
 });
 
@@ -76,13 +80,15 @@ $(document).on('click', function(event) {
   card functions
   --------------*/
 
-var makeNewNoteCard = function(locationX,locationY,title,body,body2,position) {
+var makeNewNoteCard = function(locationX,locationY,title,body,body2,cost, priority, position) {
   var locationX = typeof locationX !== 'undefined' ? locationX   : 195;
   var locationY = typeof locationY !== 'undefined' ? locationY   : 25;
   var title = typeof title !== 'undefined' ? title   : "";
   var body = typeof body !== 'undefined' ? body   : "";
   var body2 = typeof body2 !== 'undefined' ? body2   : "";
   var position = typeof position !== 'undefined' ? position : "left";
+  var cost = typeof cost !== 'undefined' ? cost : "0";
+  var priority = typeof priority !== 'undefined' ? priority : "0";
 
   var cardId = Cards.insert({
         projectId: projectId,
@@ -91,12 +97,14 @@ var makeNewNoteCard = function(locationX,locationY,title,body,body2,position) {
         body2: body2,
         locationX:  locationX,
         locationY: locationY,
+        cost: cost,
+        priority: priority,
         position: position
   });
-  drawNoteCard(cardId,locationX,locationY,title,body, body2, position);
+  drawNoteCard(cardId,locationX,locationY,title,body, body2, cost, priority, position);
 }
 
-var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, position) {
+var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, cost, priority, position) {
   //set defaults for location variables
   var locationX = typeof locationX !== 'undefined' ? locationX   : 195;
   var locationY = typeof locationY !== 'undefined' ? locationY   : 25;
@@ -113,6 +121,10 @@ var drawNoteCard = function(cardId, locationX, locationY, title, body, body2, po
     $(noteCard).find(".bodyText").val(body); //set body if argument given
   if (body2 !== 'undefined')
     $(noteCard).find(".bodyText2").val(body2); //set body2 if argument given
+  if (cost !== 'undefined')
+    $(noteCard).find(".cost").val(cost); //set cost if argument given
+  if (priority !== 'undefined')
+    $(noteCard).find(".priority").val(priority); //set priority if argument given
   noteCard.id = cardId; //hold id for updates
   noteCard.position = position;
   $(noteCard).pep({ //add pep to notecard
@@ -177,7 +189,8 @@ Template.notecard.onCreated(function() {
   this.titleText = new ReactiveVar("");
   this.bodyText = new ReactiveVar("");
   this.bodyText2 = new ReactiveVar("");
-
+  this.cost = new ReactiveVar("");
+  this.priority = new ReactiveVar("");
 });
 
 Template.notecard.events({
@@ -221,6 +234,34 @@ Template.notecard.events({
     //somehow store in database
     Cards.update(template.data.id, { //set position in database
         $set: {body2: text}
+      });
+  },
+  'input .cost, change .cost, keyup .cost, mouseup .cost': function (event,template) {
+    // Prevent default browser form submit
+    event.preventDefault();
+
+    //Get value from form element
+    //var text = event.target.titleText.value;
+    var text = event.target.value;
+    // Insert a task into the collection
+    template.cost.set(text); //set reactive var to new value
+    //somehow store in database
+    Cards.update(template.data.id, { //set position in database
+        $set: {cost: text}
+      });
+  },
+  'input .priority, change .priority, keyup .priority, mouseup .priority': function (event,template) {
+    // Prevent default browser form submit
+    event.preventDefault();
+
+    //Get value from form element
+    //var text = event.target.titleText.value;
+    var text = event.target.value;
+    // Insert a task into the collection
+    template.priority.set(text); //set reactive var to new value
+    //somehow store in database
+    Cards.update(template.data.id, { //set position in database
+        $set: {priority: text}
       });
   },
   'click .leftTriangle': function (event,template) {
