@@ -10,16 +10,12 @@ Router.route('/', {
     template: 'home'
 });
 
-Router.route('/project/:_id', function () {
-  console.log("loading project");
+Router.route('/:_id', function () {
   this.render('application');
-
-  console.log("setting project id to " + this.params._id);
   projectId = this.params._id;
   Session.set('filter', {"projectId": projectId});
   Tracker.autorun(function() {
     Meteor.subscribe('Cards', Session.get('filter'), function(){
-      console.log("meteor subscribing");
       Session.set('cards_loaded', true);
     });
   Session.set("routed", true);
@@ -63,7 +59,6 @@ Tracker.autorun(function(c){ //check whether the document and database are loade
 
 Template.application.events({ //events on the page body
   "click button.blue": function (event) { //click on new button
-    console.log("new button clicked, should make notecard");
     event.preventDefault(); // Prevent default browser form submit
     makeNewNoteCard(undefined,undefined,"", "", "", "", "", "left"); //make a new empty notecard
   }
