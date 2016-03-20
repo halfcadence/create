@@ -1,0 +1,6 @@
+.cursorCircle{
+  background: #00CCD6;
+  border-radius: 50%;
+  height: 100px; width: 100px;
+  position: absolute;
+}
