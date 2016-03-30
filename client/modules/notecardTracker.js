@@ -35,7 +35,6 @@ let startNotecardTracker = () => {
   });
 };
 
-//TODO: refactor to shared module
 let moveThing = function(thing,x,y){
    //for some reason animate doesn't go to the right position
    //$(thing).animate({ left: x, top: y}, "fast", 'linear', {queue: false});
