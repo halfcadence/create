@@ -1,0 +1,23 @@
+{
+  "name": "create",
+  "version": "1.0.0",
+  "description": "Notecard App for Extreme Programming",
+  "main": "index.js",
+  "dependencies": {
+    "randomcolor": "^0.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewshiau/create.git"
+  },
+  "author": "Andrew Shiau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrewshiau/create/issues"
+  },
+  "homepage": "https://github.com/andrewshiau/create#readme"
+}
