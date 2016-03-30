@@ -39,7 +39,8 @@ let drawNoteCard = function(id, args){
   $(noteCard.implementation).val(arguments.body2 || "");
   $(noteCard.cost).val(arguments.cost || "");
   $(noteCard.priority).val(arguments.priority || "");
-
+  if (arguments.position === "right")
+    noteCard.slide("left");
   //add functions to update database
   noteCard.input.oninput = function() {
     console.log("setting string to " + $(noteCard.input).val());
@@ -199,9 +200,15 @@ Notecard.prototype = {
     if (direction === "left") {
       $(this.implementation).css('left', 0);
       this.position = "right"; //right element showing
+      Cards.update(this.id, { //set position in database
+        $set: {position : "right"}
+      });
     } else if (direction === "right") {
       $(this.implementation).css('left', 500);
       this.position = "left"; //left element showing
+      Cards.update(this.id, { //set position in database
+        $set: {position : "left"}
+      });
     }
   },
   focusDescriptionAndEnableLeftTriangle: function() {

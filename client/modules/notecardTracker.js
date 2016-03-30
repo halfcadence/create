@@ -12,6 +12,7 @@ let startNotecardTracker = () => {
       arguments.body2 = fields.body2;
       arguments.cost = fields.cost;
       arguments.priority = fields.priority;
+      arguments.position = fields.position;
       Modules.client.drawNoteCard(id, arguments);
     },
     changed: function(id, fields) {
@@ -28,6 +29,12 @@ let startNotecardTracker = () => {
         $(document.getElementById(id)).children('.cost').val(fields.cost);
       if (fields.priority !== undefined)
         $(document.getElementById(id)).children('.priority').val(fields.priority);
+      if (fields.position !== undefined) {
+        if (fields.position === "left")
+          slide(id, "right");
+        else //fields.position === "right"
+          slide(id, "left");
+      }
     },
     removed: function (id) {
       removeThing(document.getElementById(id));
@@ -48,5 +55,15 @@ let moveThing = function(thing,x,y){
 let removeThing = function(thing){
    $(thing).remove();
 };
+
+//temporary way to access notecards
+//TODO: refactor with data structure searchable by id
+let slide = function(id, direction) {
+  if (direction === "left") {
+    $(document.getElementById(id)).children('.bodyText2').css('left', 0); //right element showing
+  } else if (direction === "right") {
+    $(document.getElementById(id)).children('.bodyText2').css('left', 500); //left element showing
+  }
+}
 
 Modules.client.startNotecardTracker = startNotecardTracker;
