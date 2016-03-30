@@ -24,7 +24,6 @@ let makeNewNoteCard = function() {
         priority: "",
         position: "left"
   });
-  //drawNoteCard(id);
 }
 
 let drawNoteCard = function(id, args){
@@ -33,6 +32,28 @@ let drawNoteCard = function(id, args){
   noteCard.id = id;
   //set div's id to same as notecard's so notecardTracker can find it
   noteCard.div.id = id;
+
+  //add argument fields
+  $(noteCard.input).val(arguments.title || "");
+  $(noteCard.description).val(arguments.body || "");
+  $(noteCard.implementation).val(arguments.body2 || "");
+
+  //add functions to update database
+  noteCard.input.oninput = function() {
+    Cards.update(id, { //set position in database
+      $set: {title : $(noteCard.input).val()}
+    });
+  };
+  noteCard.description.oninput = function() {
+    Cards.update(id, { //set position in database
+      $set: {body : $(noteCard.description).val()}
+    });
+  };
+  noteCard.implementation.oninput = function() {
+    Cards.update(id, { //set position in database
+      $set: {body2 : $(noteCard.implementation).val()}
+    });
+  };
   //left triangle clicked when body focused
   $(noteCard.leftTriangle).on('click', function() {
     noteCard.slide("left")
@@ -62,6 +83,8 @@ let drawNoteCard = function(id, args){
     rest: (function(ev) {
       if (!noteCard)
         return;
+      console.log("resting at " + $(noteCard.div).position().left + ", " +
+        $(noteCard.div).position().top);
       Cards.update(id, { //set position in database
         $set: {locationX: $(noteCard.div).position().left,
                locationY: $(noteCard.div).position().top}
