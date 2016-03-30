@@ -1,0 +1,212 @@
+Cards = new Mongo.Collection("cards");
+
+let currentFocus = null //the textarea focus on
+let currentEnabled = null
+let enabledTriangle = null
+let maxZIndex = 0;
+//new button
+Template.application.events({ //events on the page body
+  "click button.blue": function (event) { //click on new button
+    event.preventDefault(); // Prevent default browser form submit
+    makeNewNoteCard(event);
+    console.log("clicked new button");
+  }
+});
+
+let makeNewNoteCard = function(event){
+  let noteCard = new Notecard();
+  //left triangle clicked when body focused
+  $(noteCard.leftTriangle).on('click', function() {
+    noteCard.slide("left")
+    //enable and focus implementation
+    setCurrentEnabled(noteCard.implementation);
+    noteCard.focusImplementationAndEnableRightTriangle();
+  });
+
+  $(noteCard.rightTriangle).on('click', function() {
+    noteCard.slide("right")
+      //enable and focus implementation
+    setCurrentEnabled(noteCard.description);
+    noteCard.focusDescriptionAndEnableLeftTriangle();
+  });
+  $(noteCard.div).pep({
+    constrainTo: 'window',
+    elementsWithInteraction: 'textarea',
+    //detects mouseUp
+    startPos: {
+      left: 195,
+      top: 25
+    },
+    startThreshold: [25, 25],
+    initiate: function() {
+      noteCard.goToTop();
+    },
+    rest: (function(ev) {
+           var link = $(noteCard.div);
+    var position = link.position(); //cache the position
+    var right = $(window).width() - position.left - link.width();
+    var bottom = $(window).height() - position.top - link.height();
+      if (bottom <=50 && right <= 50) {
+        $(noteCard.div).remove();
+        noteCard = null;
+      }
+    }),
+    stop: (function(ev) {
+      //if mouseup when drag has not started
+      if (!this.started) {
+        point = FindLocationOnObject(ev);
+        if (point.y <= 100) { //clicked title
+          setCurrentEnabled(noteCard.input)
+          focusOn(noteCard.input)
+        }
+        //leftTriangle clicked when body is not focused
+        else if (point.y >= 200 && point.x >= 400) {
+          //slide left
+          noteCard.slide("left");
+          console.log("sliding left from pep")
+        }
+        //rightTriangle clicked when body is not focused
+        else if (point.y >= 200 && point.x <= 100) {
+          noteCard.slide("right");
+        } else { //click in body which is disabled
+          if (noteCard.position === "left") { //client view
+            setCurrentEnabled(noteCard.description);
+            noteCard.focusDescriptionAndEnableLeftTriangle();
+          } else { //developer view
+            setCurrentEnabled(noteCard.implementation);
+            noteCard.focusImplementationAndEnableRightTriangle();
+          }
+        }
+      }
+    })
+  });
+}
+
+//notecard object, without pep
+var Notecard = function() {
+  this.position = "left";
+  //make a white box, add pep to it
+  this.div = document.createElement("div");
+  this.div.classList.add("pep");
+  document.body.appendChild(this.div);
+
+  //add title
+  this.input = document.createElement('textarea');
+  $(this.input).attr('spellcheck', false);
+  this.input.classList.add("titleText");
+  $(this.div).append(this.input);
+  //add description
+  this.description = document.createElement('textarea');
+  $(this.description).attr('spellcheck', false);
+  this.description.classList.add("bodyText");
+  $(this.div).append(this.description);
+
+  //add implementation details
+  this.implementation = document.createElement('textarea');
+  $(this.implementation).attr('spellcheck', false);
+  this.implementation.classList.add("bodyText2");
+  $(this.div).append(this.implementation);
+  //somehow left triangle is the one on the right
+  this.leftTriangle = document.createElement('button');
+  this.leftTriangle.classList.add("leftTriangle");
+  $(this.div).append(this.leftTriangle);
+  //and right triangle is the one on the left
+  this.rightTriangle = document.createElement('button');
+  this.rightTriangle.classList.add("rightTriangle");
+  $(this.div).append(this.rightTriangle);
+
+  this.cost = document.createElement('textarea');
+  $(this.cost).attr('spellcheck', false);
+  this.cost.classList.add("cost");
+  $(this.div).append(this.cost);
+
+  this.priority = document.createElement('textarea');
+  $(this.priority).attr('spellcheck', false);
+  this.priority.classList.add("priority");
+  $(this.div).append(this.priority);
+};
+
+//add functions to notecard
+Notecard.prototype = {
+  constructor: Notecard,
+  goToTop: function() {
+    $(this.div).css('z-index', ++maxZIndex);
+  },
+  slide: function(direction) {
+    if (direction === "left") {
+      $(this.implementation).css('left', 0);
+      this.position = "right"; //right element showing
+    } else if (direction === "right") {
+      $(this.implementation).css('left', 500);
+      this.position = "left"; //left element showing
+    }
+  },
+  focusDescriptionAndEnableLeftTriangle: function() {
+    focusOn(this.description);
+    enable(this.leftTriangle);
+    enabledTriangle = this.leftTriangle;
+  },
+  focusImplementationAndEnableRightTriangle: function() {
+    focusOn(this.implementation);
+    enable(this.rightTriangle);
+    enabledTriangle = this.rightTriangle;
+  }
+}
+
+//unfocuses when click is not on a pep
+$(document).on('click', function(event) {
+  if (!$(event.target).closest('.pep').length) //if the target was not a pep
+    disableCurrentEnabled();
+});
+
+/*----------------
+  helper functions
+  ----------------*/
+//disables the currently enabled object and enables the param
+var setCurrentEnabled = function(object) {
+    disableCurrentEnabled()
+    currentEnabled = object;
+    enable(object);
+  }
+  //enables and disables pointer-events
+var enable = function(object) {
+  $(object).css('pointer-events', 'auto');
+  //$(object).css('background-color', 'red');
+}
+var disable = function(object) {
+  $(object).css('pointer-events', 'none');
+  //$(object).css('background-color', 'yellow');
+}
+var focusOn = function(newFocus) {
+    newFocus.focus();
+    currentFocus = newFocus;
+  }
+  //disables the currentFocus so that it can be dragged
+var unFocus = function() {
+  if (currentFocus !== null) {
+    currentFocus.blur();
+    currentFocus = null;
+  }
+}
+var disableCurrentEnabled = function() {
+    if (currentEnabled != null) {
+      if (!$(currentEnabled).hasClass('bodyText || bodyText2')) {
+        disable(enabledTriangle)
+      }
+      disable(currentEnabled)
+      currentEnabled = null
+    }
+  }
+  //finds the location of a click event on an object
+var FindLocationOnObject = function(ev) {
+  var $div = $(ev.target);
+  var $display = $div.find('.display');
+  var offset = $div.offset();
+  var x = ev.clientX - offset.left;
+  var y = ev.clientY - offset.top;
+
+  return {
+    x,
+    y
+  };
+}
