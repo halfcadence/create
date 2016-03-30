@@ -8,13 +8,29 @@ let maxZIndex = 0;
 Template.application.events({ //events on the page body
   "click button.blue": function (event) { //click on new button
     event.preventDefault(); // Prevent default browser form submit
-    makeNewNoteCard(event);
+    makeNewNoteCard();
     console.log("clicked new button");
   }
 });
 
-let makeNewNoteCard = function(event){
+let makeNewNoteCard = function() {
+  var id = Cards.insert({
+        projectId: Modules.client.getProjectId(),
+        title: "",
+        body: "",
+        body2: "",
+        locationX:  195,
+        locationY: 25,
+        cost: "",
+        priority: "",
+        position: "left"
+  });
+  drawNoteCard(id);
+}
+
+let drawNoteCard = function(id){
   let noteCard = new Notecard();
+  noteCard.id = id;
   //left triangle clicked when body focused
   $(noteCard.leftTriangle).on('click', function() {
     noteCard.slide("left")
@@ -22,7 +38,7 @@ let makeNewNoteCard = function(event){
     setCurrentEnabled(noteCard.implementation);
     noteCard.focusImplementationAndEnableRightTriangle();
   });
-
+  //right triangle clicked when body focused
   $(noteCard.rightTriangle).on('click', function() {
     noteCard.slide("right")
       //enable and focus implementation
@@ -42,10 +58,10 @@ let makeNewNoteCard = function(event){
       noteCard.goToTop();
     },
     rest: (function(ev) {
-           var link = $(noteCard.div);
-    var position = link.position(); //cache the position
-    var right = $(window).width() - position.left - link.width();
-    var bottom = $(window).height() - position.top - link.height();
+           let link = $(noteCard.div);
+    let position = link.position(); //cache the position
+    let right = $(window).width() - position.left - link.width();
+    let bottom = $(window).height() - position.top - link.height();
       if (bottom <=50 && right <= 50) {
         $(noteCard.div).remove();
         noteCard = null;
@@ -83,7 +99,7 @@ let makeNewNoteCard = function(event){
 }
 
 //notecard object, without pep
-var Notecard = function() {
+let Notecard = function() {
   this.position = "left";
   //make a white box, add pep to it
   this.div = document.createElement("div");
@@ -163,32 +179,32 @@ $(document).on('click', function(event) {
   helper functions
   ----------------*/
 //disables the currently enabled object and enables the param
-var setCurrentEnabled = function(object) {
+let setCurrentEnabled = function(object) {
     disableCurrentEnabled()
     currentEnabled = object;
     enable(object);
   }
   //enables and disables pointer-events
-var enable = function(object) {
+let enable = function(object) {
   $(object).css('pointer-events', 'auto');
   //$(object).css('background-color', 'red');
 }
-var disable = function(object) {
+let disable = function(object) {
   $(object).css('pointer-events', 'none');
   //$(object).css('background-color', 'yellow');
 }
-var focusOn = function(newFocus) {
+let focusOn = function(newFocus) {
     newFocus.focus();
     currentFocus = newFocus;
   }
   //disables the currentFocus so that it can be dragged
-var unFocus = function() {
+let unFocus = function() {
   if (currentFocus !== null) {
     currentFocus.blur();
     currentFocus = null;
   }
 }
-var disableCurrentEnabled = function() {
+let disableCurrentEnabled = function() {
     if (currentEnabled != null) {
       if (!$(currentEnabled).hasClass('bodyText || bodyText2')) {
         disable(enabledTriangle)
@@ -198,15 +214,17 @@ var disableCurrentEnabled = function() {
     }
   }
   //finds the location of a click event on an object
-var FindLocationOnObject = function(ev) {
-  var $div = $(ev.target);
-  var $display = $div.find('.display');
-  var offset = $div.offset();
-  var x = ev.clientX - offset.left;
-  var y = ev.clientY - offset.top;
+let FindLocationOnObject = function(ev) {
+  let $div = $(ev.target);
+  let $display = $div.find('.display');
+  let offset = $div.offset();
+  let x = ev.clientX - offset.left;
+  let y = ev.clientY - offset.top;
 
   return {
     x,
     y
   };
 }
+
+Modules.client.drawNoteCard = drawNoteCard;
