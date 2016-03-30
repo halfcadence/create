@@ -3,19 +3,19 @@ let moved = false;
 let startCursorTracker = () => {
   let mouseX = 0;
   let mouseY = 0;
-  let time = new Date;
-  let cursorId;
+  let time = new ReactiveVar(new Date);
+
+  Tracker.autorun(function(c) {
+    insertCursor(mouseX,mouseY,time.get());
+    c.stop();
+  });
+
   //periodically update time
   setInterval(function () {
     Meteor.call("getServerTime", function (error, result) {
-        time = result;
+        time.set(result);
     });
   }, 200);
-  cursorId = Cursors.insert({
-    locationX: mouseX,
-    locationY: mouseY,
-    time: time
-  });
   //track mouse position
   $(document).on('mousemove', function(e){
         mouseX = e.pageX;
@@ -23,10 +23,22 @@ let startCursorTracker = () => {
         moved = true;
   });
   //update mouse position on interval
-  setInterval(function() {setPosition(cursorId, mouseX,mouseY, time);}, 200);
+  Tracker.autorun(function(c) {
+    setPosition(cursorId, mouseX,mouseY, time.get());
+  });
+  //setInterval(setPosition(cursorId, mouseX,mouseY, time.get()), 200);
+
+  //track other mice
   Modules.client.startOtherCursorTracker();
 };
 
+let insertCursor = function(mouseX, mouseY, time) {
+    cursorId = Cursors.insert({
+    locationX: mouseX,
+    locationY: mouseY,
+    time: time
+  });
+}
 let setPosition = function(i, x, y, t){
   if (!moved) return;
   Cursors.upsert(i, { //set position in database and time last updated
@@ -38,4 +50,8 @@ let setPosition = function(i, x, y, t){
   moved = false;
 };
 
+let _getCursorId = function() {
+  return cursorId;
+}
 Modules.client.startCursorTracker = startCursorTracker;
+Modules.client.getCursorId = _getCursorId;
