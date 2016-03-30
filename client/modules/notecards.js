@@ -9,7 +9,6 @@ Template.application.events({ //events on the page body
   "click button.blue": function (event) { //click on new button
     event.preventDefault(); // Prevent default browser form submit
     makeNewNoteCard();
-    console.log("clicked new button");
   }
 });
 
@@ -25,12 +24,15 @@ let makeNewNoteCard = function() {
         priority: "",
         position: "left"
   });
-  drawNoteCard(id);
+  //drawNoteCard(id);
 }
 
-let drawNoteCard = function(id){
+let drawNoteCard = function(id, args){
+  let arguments = args || {};
   let noteCard = new Notecard();
   noteCard.id = id;
+  //set div's id to same as notecard's so notecardTracker can find it
+  noteCard.div.id = id;
   //left triangle clicked when body focused
   $(noteCard.leftTriangle).on('click', function() {
     noteCard.slide("left")
@@ -50,22 +52,20 @@ let drawNoteCard = function(id){
     elementsWithInteraction: 'textarea',
     //detects mouseUp
     startPos: {
-      left: 195,
-      top: 25
+      left: arguments.locationX || 195,
+      top: arguments.locationY || 25
     },
     startThreshold: [25, 25],
     initiate: function() {
       noteCard.goToTop();
     },
     rest: (function(ev) {
-           let link = $(noteCard.div);
-    let position = link.position(); //cache the position
-    let right = $(window).width() - position.left - link.width();
-    let bottom = $(window).height() - position.top - link.height();
-      if (bottom <=50 && right <= 50) {
-        $(noteCard.div).remove();
-        noteCard = null;
-      }
+      if (!noteCard)
+        return;
+      Cards.update(id, { //set position in database
+        $set: {locationX: $(noteCard.div).position().left,
+               locationY: $(noteCard.div).position().top}
+      });
     }),
     stop: (function(ev) {
       //if mouseup when drag has not started
@@ -94,6 +94,16 @@ let drawNoteCard = function(id){
           }
         }
       }
+
+      let link = $(noteCard.div);
+      let position = link.position(); //cache the position
+      let right = $(window).width() - position.left - link.width();
+      let bottom = $(window).height() - position.top - link.height();
+        if (bottom <=50 && right <= 50) {
+          Cards.remove({_id : noteCard.id})
+          //$(noteCard.div).remove();
+          //noteCard = null;
+        }
     })
   });
 }

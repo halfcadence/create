@@ -22,7 +22,7 @@ let startOtherCursorTracker = () => {
     removed: function (id) {
       //if (Modules.client.getCursorId() == id) //if it's our cursor
       //  return;
-      
+
       removeThing(document.getElementById(id));
     }
   });
