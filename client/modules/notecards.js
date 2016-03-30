@@ -37,9 +37,12 @@ let drawNoteCard = function(id, args){
   $(noteCard.input).val(arguments.title || "");
   $(noteCard.description).val(arguments.body || "");
   $(noteCard.implementation).val(arguments.body2 || "");
+  $(noteCard.cost).val(arguments.cost || "");
+  $(noteCard.priority).val(arguments.priority || "");
 
   //add functions to update database
   noteCard.input.oninput = function() {
+    console.log("setting string to " + $(noteCard.input).val());
     Cards.update(id, { //set position in database
       $set: {title : $(noteCard.input).val()}
     });
@@ -54,6 +57,17 @@ let drawNoteCard = function(id, args){
       $set: {body2 : $(noteCard.implementation).val()}
     });
   };
+  noteCard.cost.oninput = function() {
+    Cards.update(id, { //set position in database
+      $set: {cost : $(noteCard.cost).val()}
+    });
+  };
+  noteCard.priority.oninput = function() {
+    Cards.update(id, { //set position in database
+      $set: {priority : $(noteCard.priority).val()}
+    });
+  };
+
   //left triangle clicked when body focused
   $(noteCard.leftTriangle).on('click', function() {
     noteCard.slide("left")
