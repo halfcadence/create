@@ -1,57 +1,40 @@
 let cursorId;
 let moved = false;
 let startCursorTracker = () => {
-  let mouseX = 0;
-  let mouseY = 0;
-  let time = new ReactiveVar(new Date);
+  let mouseX = -100;
+  let mouseY = -100;
 
-  Tracker.autorun(function(c) {
-    insertCursor(mouseX,mouseY,time.get());
-    c.stop();
-  });
+  insertCursor(mouseX,mouseY);
 
-  //periodically update time
-  setInterval(function () {
-    Meteor.call("getServerTime", function (error, result) {
-        time.set(result);
-    });
+  setInterval(function () { //update position on interval
+    setPosition(cursorId, mouseX,mouseY);
   }, 200);
-  //track mouse position
-  $(document).on('mousemove', function(e){
+
+  $(document).on('mousemove', function(e){ //track mouse position
         mouseX = e.pageX;
         mouseY = e.pageY;
         moved = true;
   });
-  //update mouse position on interval
-  Tracker.autorun(function(c) {
-    setPosition(cursorId, mouseX,mouseY, time.get());
-  });
-  //setInterval(setPosition(cursorId, mouseX,mouseY, time.get()), 200);
 
-  //track other mice
-  Modules.client.startOtherCursorTracker();
+  Modules.client.startOtherCursorTracker(); //track other mice
 };
 
-let insertCursor = function(mouseX, mouseY, time) {
-    cursorId = Cursors.insert({
-    locationX: mouseX,
-    locationY: mouseY,
-    time: time
+let insertCursor = function(mouseX, mouseY) {
+  cursorId = Cursors.insert({
+  locationX: mouseX,
+  locationY: mouseY,
   });
 }
-let setPosition = function(i, x, y, t){
-  if (!moved) return;
-  Cursors.upsert(i, { //set position in database and time last updated
-    $set: {
-      locationX: x,
-      locationY: y,
-      time: t}
-    });
+
+let setPosition = function(cursorId, x, y){
+  if (!moved || !cursorId) return; //if cursor hasn't moved or cursorid hasn't been set
+  Meteor.call("setCursorPosition", cursorId, x, y);
   moved = false;
 };
 
 let _getCursorId = function() {
   return cursorId;
 }
+
 Modules.client.startCursorTracker = startCursorTracker;
 Modules.client.getCursorId = _getCursorId;
