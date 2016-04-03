@@ -11,9 +11,9 @@ let startCursorTracker = () => {
   }, 200);
 
   $(document).on('mousemove', function(e){ //track mouse position
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-        moved = true;
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+    moved = true;
   });
 
   Modules.client.startOtherCursorTracker(); //track other mice
@@ -21,6 +21,7 @@ let startCursorTracker = () => {
 
 let insertCursor = function(mouseX, mouseY) {
   cursorId = Cursors.insert({
+  projectId: Modules.client.getProjectId(),
   locationX: mouseX,
   locationY: mouseY,
   });
@@ -28,7 +29,7 @@ let insertCursor = function(mouseX, mouseY) {
 
 let setPosition = function(cursorId, x, y){
   if (!moved || !cursorId) return; //if cursor hasn't moved or cursorid hasn't been set
-  Meteor.call("setCursorPosition", cursorId, x, y);
+  Meteor.call("setCursorPosition", cursorId, x, y, Modules.client.getProjectId());
   moved = false;
 };
 

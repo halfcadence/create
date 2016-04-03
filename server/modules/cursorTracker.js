@@ -4,12 +4,12 @@ Meteor.publish('Cursors', function(filter){
 });
 
 Meteor.methods({
-  setCursorPosition: function(i, x, y){
-    if (!i) return; //if cursorid hasn't been set
+  setCursorPosition: function(cursorId, x, y, projectId){
+    if (!cursorId) return; //if cursorid hasn't been set
     //set position in database and time last updated
     console.log("updating a cursor at " + Date.now());
-    Cursors.upsert(i, {
-      $set: { locationX: x, locationY: y, updatedAt: Date.now()}
+    Cursors.upsert(cursorId, {
+      $set: { locationX: x, locationY: y, projectId: projectId, updatedAt: Date.now()}
       });
   }
 });

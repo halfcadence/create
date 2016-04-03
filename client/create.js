@@ -4,17 +4,16 @@ Router.route('/', {
     template: 'home'
 });
 Router.route('/:_id', {
-  subscriptions: function() {
-    this.subscribe('Cursors');
-  },
   action: function () {
     this.render('application');
     projectId = this.params._id;
     var filter =  {"projectId": projectId};
-    Meteor.subscribe('Cards', Session.get('filter'), function(){
+    Meteor.subscribe('Cards', filter, function(){
       Modules.client.startNotecardTracker();
     });
-    Modules.client.startCursorTracker();
+    Meteor.subscribe('Cursors', filter, function(){
+      Modules.client.startCursorTracker();
+    });
   }
 });
 
