@@ -4,6 +4,7 @@ let startNotecardTracker = () => {
   let cards = Cards.find();
   let cardsHandle = cards.observeChanges({
     added: function (id, fields) {
+      //set arguments
       let arguments = {};
       arguments.locationX = fields.locationX;
       arguments.locationY = fields.locationY;
@@ -13,10 +14,11 @@ let startNotecardTracker = () => {
       arguments.cost = fields.cost;
       arguments.priority = fields.priority;
       arguments.position = fields.position;
+
+      //draw the card
       Modules.client.drawNoteCard(id, arguments);
     },
     changed: function(id, fields) {
-      //console.log("moving to" + fields.locationX + ", " + fields.locationY);
       if (fields.locationX  !== undefined || fields.locationY !== undefined)
         moveThing(document.getElementById(id),fields.locationX, fields.locationY);
       if (fields.title !== undefined)

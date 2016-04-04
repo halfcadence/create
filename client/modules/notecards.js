@@ -44,27 +44,27 @@ let drawNoteCard = function(id, args){
   //add functions to update database
   noteCard.input.oninput = function() {
     console.log("setting string to " + $(noteCard.input).val());
-    Cards.update(id, { //set position in database
+    Cards.update(id, {
       $set: {title : $(noteCard.input).val()}
     });
   };
   noteCard.description.oninput = function() {
-    Cards.update(id, { //set position in database
+    Cards.update(id, {
       $set: {body : $(noteCard.description).val()}
     });
   };
   noteCard.implementation.oninput = function() {
-    Cards.update(id, { //set position in database
+    Cards.update(id, {
       $set: {body2 : $(noteCard.implementation).val()}
     });
   };
   noteCard.cost.oninput = function() {
-    Cards.update(id, { //set position in database
+    Cards.update(id, {
       $set: {cost : $(noteCard.cost).val()}
     });
   };
   noteCard.priority.oninput = function() {
-    Cards.update(id, { //set position in database
+    Cards.update(id, {
       $set: {priority : $(noteCard.priority).val()}
     });
   };
@@ -138,9 +138,7 @@ let drawNoteCard = function(id, args){
       let right = $(window).width() - position.left - link.width();
       let bottom = $(window).height() - position.top - link.height();
         if (bottom <=50 && right <= 50) {
-          Cards.remove({_id : noteCard.id})
-          //$(noteCard.div).remove();
-          //noteCard = null;
+          Cards.remove({_id : noteCard.id});
         }
     })
   });
