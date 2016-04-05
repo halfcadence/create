@@ -95,6 +95,13 @@ let drawNoteCard = function(id, args){
     initiate: function() {
       noteCard.goToTop();
     },
+    drag: function(ev, obj){
+      console.log('dragging to ' + $(noteCard.div).position().left + ", " + $(noteCard.div).position().top + '.');
+      Cards.update(id, { //set position in database...TODO: optimize this a bit with an interval
+        $set: {locationX: $(noteCard.div).position().left,
+               locationY: $(noteCard.div).position().top}
+      });
+    },
     rest: (function(ev) {
       if (!noteCard)
         return;
