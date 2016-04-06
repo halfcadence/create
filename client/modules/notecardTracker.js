@@ -31,12 +31,14 @@ let startNotecardTracker = () => {
         $(document.getElementById(id)).children('.cost').val(fields.cost);
       if (fields.priority !== undefined)
         $(document.getElementById(id)).children('.priority').val(fields.priority);
+      /*
       if (fields.position !== undefined) {
         if (fields.position === "left")
           slide(id, "right");
         else //fields.position === "right"
           slide(id, "left");
       }
+      */
     },
     removed: function (id) {
       removeThing(document.getElementById(id));

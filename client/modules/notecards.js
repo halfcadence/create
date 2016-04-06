@@ -1,6 +1,6 @@
 Cards = new Mongo.Collection("cards");
 
-let currentFocus = null //the textarea focus on
+let currentFocus = null //the textarea focused on
 let currentEnabled = null
 let enabledTriangle = null
 let maxZIndex = 0;
@@ -116,19 +116,22 @@ let drawNoteCard = function(id, args){
       //if mouseup when drag has not started
       if (!this.started) {
         point = FindLocationOnObject(ev);
+        console.log(point);
         if (point.y <= 100) { //clicked title
-          setCurrentEnabled(noteCard.input)
-          focusOn(noteCard.input)
+          setCurrentEnabled(noteCard.input);
+          console.log("enabling input");
+          focusOn(noteCard.input);
         }
         //leftTriangle clicked when body is not focused
         else if (point.y >= 200 && point.x >= 400) {
           //slide left
           noteCard.slide("left");
-          console.log("sliding left from pep")
+          console.log("sliding left from pep");
         }
         //rightTriangle clicked when body is not focused
         else if (point.y >= 200 && point.x <= 100) {
           noteCard.slide("right");
+          console.log("sliding right from pep")
         } else { //click in body which is disabled
           if (noteCard.position === "left") { //client view
             setCurrentEnabled(noteCard.description);

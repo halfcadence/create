@@ -38,6 +38,7 @@ body {
   top: -100px;
   left: -100px;
   z-index:1000000;
+  pointer-events:none;
 }
 
 .create {
