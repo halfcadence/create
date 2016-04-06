@@ -52,7 +52,6 @@ let moveThing = function(thing,x,y){
    let position = {};
    position.left = x;
    position.top = y;
-   console.log("moving to " + position.left + ", " + position.top);
    $(thing).offset(position);
 };
 

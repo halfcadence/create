@@ -24,12 +24,13 @@ let insertCursor = function(mouseX, mouseY) {
   projectId: Modules.client.getProjectId(),
   locationX: mouseX,
   locationY: mouseY,
+  color: Modules.client.getUserColor()
   });
 }
 
 let setPosition = function(cursorId, x, y){
   if (!moved || !cursorId) return; //if cursor hasn't moved or cursorid hasn't been set
-  Meteor.call("setCursorPosition", cursorId, x, y, Modules.client.getProjectId());
+  Meteor.call("setCursorPosition", cursorId, x, y, Modules.client.getProjectId(),Modules.client.getUserColor());
   moved = false;
 };
 

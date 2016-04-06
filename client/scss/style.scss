@@ -247,10 +247,9 @@ textarea {
   outline: 0;
   overflow: auto;
   resize: none;
-  &:focus{
+  /*&:focus{
     border: solid 2px $button-blue;
-    //background-color:$highlight-color;
-  }
+  }*/
 }
 input::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder{
