@@ -1,4 +1,4 @@
-Cursors = new Mongo.Collection("cursors");
+Cursors = new Mongo.Collection("cursors"); //remove this line?
 let projectId;
 Router.route('/', {
     template: 'home'
@@ -8,6 +8,10 @@ Router.route('/:_id', {
     this.render('application');
     projectId = this.params._id;
     var filter =  {"projectId": projectId};
+    Modules.client.startCaretTracker();
+    Meteor.subscribe('Carets', filter, function(){
+      Modules.client.startOtherCaretTracker();
+    });
     Meteor.subscribe('Cards', filter, function(){
       Modules.client.startNotecardTracker();
     });

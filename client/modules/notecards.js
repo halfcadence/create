@@ -43,7 +43,6 @@ let drawNoteCard = function(id, args){
     noteCard.slide("left");
   //add functions to update database
   noteCard.input.oninput = function() {
-    console.log("setting string to " + $(noteCard.input).val());
     Cards.update(id, {
       $set: {title : $(noteCard.input).val()}
     });
@@ -96,17 +95,15 @@ let drawNoteCard = function(id, args){
       noteCard.goToTop();
     },
     drag: function(ev, obj){
-      console.log('dragging to ' + $(noteCard.div).position().left + ", " + $(noteCard.div).position().top + '.');
       Cards.update(id, { //set position in database...TODO: optimize this a bit with an interval
         $set: {locationX: $(noteCard.div).position().left,
                locationY: $(noteCard.div).position().top}
       });
+      Modules.client.moveCaret(-100,-100); //kill the caret... eventually we need to figure out which text box it's in and move, etc...
     },
     rest: (function(ev) {
       if (!noteCard)
         return;
-      console.log("resting at " + $(noteCard.div).position().left + ", " +
-        $(noteCard.div).position().top);
       Cards.update(id, { //set position in database
         $set: {locationX: $(noteCard.div).position().left,
                locationY: $(noteCard.div).position().top}
@@ -116,22 +113,18 @@ let drawNoteCard = function(id, args){
       //if mouseup when drag has not started
       if (!this.started) {
         point = FindLocationOnObject(ev);
-        console.log(point);
         if (point.y <= 100) { //clicked title
           setCurrentEnabled(noteCard.input);
-          console.log("enabling input");
           focusOn(noteCard.input);
         }
         //leftTriangle clicked when body is not focused
         else if (point.y >= 200 && point.x >= 400) {
           //slide left
           noteCard.slide("left");
-          console.log("sliding left from pep");
         }
         //rightTriangle clicked when body is not focused
         else if (point.y >= 200 && point.x <= 100) {
           noteCard.slide("right");
-          console.log("sliding right from pep")
         } else { //click in body which is disabled
           if (noteCard.position === "left") { //client view
             setCurrentEnabled(noteCard.description);
@@ -233,8 +226,10 @@ Notecard.prototype = {
 
 //unfocuses when click is not on a pep
 $(document).on('click', function(event) {
-  if (!$(event.target).closest('.pep').length) //if the target was not a pep
+  if (!$(event.target).closest('.pep').length) {//if the target was not a pep
     disableCurrentEnabled();
+  Modules.client.moveCaret(-100,-100); //remove caret
+  }
 });
 
 /*----------------
