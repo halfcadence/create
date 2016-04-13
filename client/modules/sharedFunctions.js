@@ -1,6 +1,5 @@
 //move a dom element
 let moveThing = function(thing,x,y){
-   console.log("moving to " + x + ", " + y);
    let position = {};
    position.left = x;
    position.top = y;

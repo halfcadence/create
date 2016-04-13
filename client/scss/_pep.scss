@@ -1,0 +1,116 @@
+.pep{
+    position: absolute;
+    top: -25px;
+    left: 25px;
+    background: $card-background-color;
+    height: 300px; width: 500px;
+    box-shadow: 0px 2px 5px 2px rgba(150, 150, 150, 0.8);
+    opacity: .9;
+    overflow:hidden;
+    &:hover{
+      cursor: pointer;
+      display:block;
+    }
+  }
+
+.leftTriangle {
+  position:absolute;
+  border:none;
+  outline:none;
+  bottom: 12px;
+  right: 12px;
+  background:$dark-card-color;
+  pointer-events:none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow:hidden;
+
+  background-color: $dark-card-color;
+}
+.rightTriangle {
+  position:absolute;
+  border:none;
+  outline:none;
+  color: none;
+  bottom: 12px;
+  left: 12px;
+  pointer-events:none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow:hidden;
+
+  background-color: $card-background-color;
+}
+.titleText{
+    position: relative;
+    box-sizing: border-box;
+    padding: 25px 30px 0px 30px;
+    font-size: 3.5em;
+    font-weight: 100;
+    width: 100%;
+    height: calc(100% / 3);
+    background-color: $pep-color;
+    pointer-events:none;
+  }
+
+.bodyText{
+  position: relative;
+  box-sizing: border-box;
+  top: 0px;
+  left: 0px;
+  padding: 20px 30px 20px 30px;
+  font-size: 2.5em;
+  font-weight: 100;
+  font-style: normal;
+  background:none;
+  width: 100%;
+  height: calc(200% / 3);
+  pointer-events:none;
+
+}
+
+.bodyText2{
+  position: relative;
+  box-sizing: border-box;
+  top: calc(-200% / 3);
+  left: 100%;
+  padding: 20px 30px 20px 30px;
+  font-size: 2.5em;
+  font-weight: 100;
+  font-style: normal;
+  background-color: $dark-card-color;
+  width: 100%;
+  height: calc(200% / 3);
+  pointer-events:none;
+}
+
+.cost {
+  position:absolute;
+  box-sizing: border-box;
+  padding: 13px 0px 0px 10px;
+  font-size: 3.5em;
+  font-weight: 100;
+  width: 50px;
+  height: 80px;
+  color: none;
+  top:10px;
+  right: 74px;
+  overflow:hidden;
+  background: $card-background-color;
+}
+.priority{
+  position:absolute;
+  box-sizing: border-box;
+  padding: 13px 0px 0px 10px;
+  font-size: 3.5em;
+  font-weight: 100;
+  width: 50px;
+  height: 80px;
+  color: none;
+  top:10px;
+  right: 12px;
+  overflow:hidden;
+  background: $card-background-color;
+}

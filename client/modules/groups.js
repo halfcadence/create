@@ -91,21 +91,21 @@ let groupPepOnClick = function() {
   Cards.update(this.id, { //set position in database
     $set: {groupId : ""}
   });
-  hideVeil();
+  hideVeil(currentGroupId);
 }
 
 //TODO: dynamically allocate this array
 //makes the array with positions cards will be drawn from the group
 let makePlacementArray = function() {
-  let cornerDistance = 25;
+  let cornerDistance = 50;
   let xStep = 510; //distance between each card <->
   let yStep = 310; //distance between each card ^-v
   let drawPositions = [
     {x:cornerDistance, y:cornerDistance},
     {x:cornerDistance + xStep, y:cornerDistance},
-    {x:cornerDistance + 2*xStep, y:cornerDistance},
     {x:cornerDistance, y:cornerDistance + yStep},
     {x:cornerDistance + xStep, y:cornerDistance + yStep},
+    {x:cornerDistance + 2*xStep, y:cornerDistance},
     {x:cornerDistance + 2*xStep, y:cornerDistance + yStep}
   ];
   return drawPositions;

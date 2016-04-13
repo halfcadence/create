@@ -112,7 +112,8 @@ let drawNoteCard = function(id, args){
       }
       Cards.update(id, { //set position in database
         $set: {locationX: $(noteCard.div).position().left,
-               locationY: $(noteCard.div).position().top}
+              locationY: $(noteCard.div).position().top,
+              groupId: ""}
       });
     }),
     stop: (function(ev) {

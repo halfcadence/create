@@ -1,0 +1,138 @@
+.cursorCircle{
+  background: none;
+  border-style: solid;
+  border-width: 30px 30px 0 0;
+  border-color: #FFEC64 transparent transparent transparent;
+  height: 0; width: 0;
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  z-index:1000000;
+  pointer-events:none;
+}
+
+.create {
+  button{
+  background: transparent;
+  box-shadow: 0px 2px 5px 2px rgba(150, 150, 150, 0.8);
+  height: 150px;
+  width: 250px;
+  outline: none;
+  position: absolute;
+  position: fixed;
+  z-index:100000;
+  top: 50px;
+  left: 45px;
+  &.blue{
+  border: 2px solid $button-blue;
+  }
+  &:hover{
+    cursor: pointer;
+    border: 2px solid $button-pressed-color;}
+  &:active{
+    box-shadow: 0px 1px 4px 0px rgba(119, 119, 119, 0.8);
+    margin-top: 1px;
+    color: $button-pressed-color;
+  }
+  span{
+    font-family: "Roboto", sans-serif;
+    text-transform: lowercase;
+    font-weight: 100;
+    font-size: 4.2em;
+    font-style: italic;
+    color: $button-pressed-color;
+    background: none;
+    display: block;
+    line-height: 82%;
+    &.blue{
+      color: $button-blue;
+    }
+  }
+}
+}
+
+.del {
+  button{
+    background: url(/images/trashcan.png) no-repeat;
+    height: 168px;
+    width: 160px;
+    outline: none;
+    position: fixed;
+    z-index:1000000;
+    bottom: 50px;
+    right: 45px;
+    border: none;
+    &:hover{
+      cursor: pointer;
+    }
+    &:active{
+      margin-bottom: -1px;
+    }
+  }
+}
+
+.group {
+  button{
+    background: url(/images/group.png) no-repeat;
+    height: 157px;
+    width: 258px;
+    outline: none;
+    position: fixed;
+    z-index:1000000;
+    bottom: 50px;
+    left: 45px;
+    border: none;
+    &:hover{
+      cursor: pointer;
+    }
+    &:active{
+      margin-bottom: -1px;
+    }
+  }
+}
+
+.veil {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  bottom: 25px;
+  right: 25px;
+  z-index: 10000000;
+  //pointer-events:none;
+  background: #000000;
+  box-shadow: 0px 10px 10px 5px rgba(50, 50, 50, 0.8);
+  opacity: .7;
+  overflow: hidden;
+  visibility: hidden;
+  button{
+    outline: none;
+    border:none;
+    position: absolute;
+    z-index:100000000;
+    &.x{
+      background: url(/images/x.png) no-repeat;
+      top:20px;
+      right: 20px;
+      height: 60px;
+      width: 60px;
+    }
+    &:active{
+      margin-top: 1px;
+    }
+    &.removeall{
+      background: url(/images/removeAllText.png) no-repeat;
+      margin: 0 auto;
+      left:0;
+      right:0;
+      bottom:30px;
+      height: 32px;
+      width: 192px;
+    }
+    &:hover{
+      cursor: pointer;
+    }
+    &:active{
+      margin-bottom: -1px;
+    }
+  }
+}
