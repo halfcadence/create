@@ -242,18 +242,37 @@ body {
   background: $card-background-color;
 }
 .veil {
-position: absolute;
-top: 15px;
-left: 15px;
-bottom: 15px;
-right: 15px;
-z-index: 10000000;
-background: #000000;
-box-shadow: 0px 10px 10px 5px rgba(50, 50, 50, 0.8);
-opacity: .7;
-overflow: hidden;
-visibility: hidden;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  bottom: 15px;
+  right: 15px;
+  z-index: 10000000;
+  //pointer-events:none;
+  background: #000000;
+  box-shadow: 0px 10px 10px 5px rgba(50, 50, 50, 0.8);
+  opacity: .7;
+  overflow: hidden;
+  visibility: hidden;
+  button{
+    background: url(/images/x.png) no-repeat;
+    top:20px;
+    right: 20px;
+    height: 60px;
+    width: 60px;
+    outline: none;
+    border:none;
+    position: absolute;
+    z-index:10000002;
+    &:hover{
+      cursor: pointer;
+    }
+    &:active{
+      margin-top: 1px;
+    }
+  }
 }
+
 textarea {
   //color : transparent;
   //text-shadow : 0 0 0 #000;
