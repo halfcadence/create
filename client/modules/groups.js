@@ -16,10 +16,10 @@ let showTrashCards = function() {
   drawPositions = makePlacementArray();
   let drawPositionIndex = 0;
   trashCards.forEach(function(card) {
-      Modules.client.moveThing(document.getElementById(card._id), drawPositions[drawPositionIndex].x,drawPositions[drawPositionIndex].y);
-      drawPositionIndex = (drawPositionIndex + 1 ) % drawPositions.length;
-      Modules.client.setZIndex(document.getElementById(card._id), 10000001)
-      console.log("locX" + card.locationX);
+    Modules.client.moveThing(document.getElementById(card._id), drawPositions[drawPositionIndex].x,drawPositions[drawPositionIndex].y);
+    Modules.client.setZIndex(document.getElementById(card._id), 10000001); //set z index about veil
+    drawPositionIndex = (drawPositionIndex + 1 ) % drawPositions.length;
+    console.log("locX" + card.locationX);
   });
 
 }
@@ -31,16 +31,26 @@ let showVeil = function () {
   let x = $(".x");
   veil.css('visibility', "visible");
   $(x).on( "click.veil", hideVeil); //turn on click events under validator namespace
-  $(".pep").on( "mousedown.veil", hideVeil);
+  $(".pep").on( "mousedown.veil", groupPepOnClick);
 }
 
-//hide the veil
-//remove its click listeners
 let hideVeil = function () {
+  //hide the veil
   let veil = $(".veil");
   veil.css('visibility', "hidden");
+
+  //remove its click listeners
   $( ".x" ).off( ".veil" );
   $(".pep").off( ".veil");
+}
+
+// a pep in a group was clicked
+// remove it from the group, then hide veil
+let groupPepOnClick = function() {
+  Cards.update(this.id, { //set position in database
+    $set: {groupId : ""}
+  });
+  hideVeil();
 }
 
 //TODO: dynamically allocate this array
@@ -57,6 +67,5 @@ let makePlacementArray = function() {
     {x:cornerDistance + xStep, y:cornerDistance + yStep},
     {x:cornerDistance + 2*xStep, y:cornerDistance + yStep}
   ];
-  console.log(drawPositions.length)
   return drawPositions;
 }

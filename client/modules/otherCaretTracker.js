@@ -11,7 +11,6 @@ let startOtherCaretTracker = () => {
       arguments.color = fields.color;
       arguments.left = fields.locationX;
       arguments.top = fields.locationY;
-      console.log("drawing this shit at " + arguments.top + ", " + arguments.left);
       let caret = Modules.client.drawCaret(arguments);
       caret.id = id;
     },

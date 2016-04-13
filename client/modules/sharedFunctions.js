@@ -1,5 +1,8 @@
 //move a dom element
 let moveThing = function(thing,x,y){
+   // for some reason peps moved by this function
+   // accept mouse events
+   //console.log("moving to " + x + ", " + y);
    let position = {};
    position.left = x;
    position.top = y;

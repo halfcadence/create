@@ -52,7 +52,6 @@ let setPositionBasedOnGroupChange = function(cardId, groupId){
    if (groupId === "") { //no group
    }
    else { //item was put in a group, move it out of sight
-     Modules.client.moveThing(document.getElementById(cardId), 125 + 10000, 125 + 10000);
    }
 };
 
