@@ -82,7 +82,7 @@ let drawNoteCard = function(id, args){
     noteCard.focusDescriptionAndEnableLeftTriangle();
   });
   $(noteCard.div).pep({
-    cssEaseDuration: 100, //amount of time betwen stop and rest
+    cssEaseDuration: 750, //amount of time betwen stop and rest
     constrainTo: 'window',
     elementsWithInteraction: 'textarea',
     //detects mouseUp
@@ -105,6 +105,12 @@ let drawNoteCard = function(id, args){
     rest: (function(ev) {
       if (!noteCard)
         return;
+
+      //second half of rest bug workaround
+      if (noteCard.grouped) {
+        noteCard.grouped = false;
+        return;
+      }
       Cards.update(id, { //set position in database
         $set: {locationX: $(noteCard.div).position().left,
                locationY: $(noteCard.div).position().top}
@@ -150,6 +156,7 @@ let drawNoteCard = function(id, args){
               locationX: $(document).width() *2,
               locationY: 0}
           });
+          noteCard.grouped = true; //workaround for rest bug
           console.log("setting groupid and position in mongo");
         }
     })
