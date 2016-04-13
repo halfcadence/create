@@ -1,5 +1,3 @@
-Cards = new Mongo.Collection("cards");
-
 let currentFocus = null //the textarea focused on
 let currentEnabled = null
 let enabledTriangle = null
@@ -22,7 +20,8 @@ let makeNewNoteCard = function() {
         locationY: 25,
         cost: "",
         priority: "",
-        position: "left"
+        position: "left",
+        groupId: ""
   });
 }
 
@@ -141,7 +140,11 @@ let drawNoteCard = function(id, args){
       let right = $(window).width() - position.left - link.width();
       let bottom = $(window).height() - position.top - link.height();
         if (bottom <=50 && right <= 50) {
-          Cards.remove({_id : noteCard.id});
+          // delete the card
+          // Cards.remove({_id : noteCard.id});
+          Cards.update(noteCard.id, { //set position in database
+            $set: {groupId : "trash"}
+          });
         }
     })
   });

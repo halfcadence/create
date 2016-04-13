@@ -20,7 +20,7 @@ let startNotecardTracker = () => {
     },
     changed: function(id, fields) {
       if (fields.locationX  !== undefined || fields.locationY !== undefined)
-        moveThing(document.getElementById(id),fields.locationX, fields.locationY);
+        Modules.client.moveThing(document.getElementById(id),fields.locationX, fields.locationY);
       if (fields.title !== undefined)
         $(document.getElementById(id)).children('.titleText').val(fields.title);
       if (fields.body !== undefined)
@@ -31,6 +31,8 @@ let startNotecardTracker = () => {
         $(document.getElementById(id)).children('.cost').val(fields.cost);
       if (fields.priority !== undefined)
         $(document.getElementById(id)).children('.priority').val(fields.priority);
+      if (fields.groupId !== undefined)
+        setPositionBasedOnGroupChange(id, fields.groupId);
       /*
       if (fields.position !== undefined) {
         if (fields.position === "left")
@@ -46,13 +48,12 @@ let startNotecardTracker = () => {
   });
 };
 
-let moveThing = function(thing,x,y){
-   //for some reason animate doesn't go to the right position
-   //$(thing).animate({ left: x, top: y}, "fast", 'linear', {queue: false});
-   let position = {};
-   position.left = x;
-   position.top = y;
-   $(thing).offset(position);
+let setPositionBasedOnGroupChange = function(cardId, groupId){
+   if (groupId === "") { //no group
+   }
+   else { //item was put in a group, move it out of sight
+     Modules.client.moveThing(document.getElementById(cardId), 125 + 10000, 125 + 10000);
+   }
 };
 
 let removeThing = function(thing){

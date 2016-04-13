@@ -105,6 +105,26 @@ body {
 }
 }
 
+.group {
+  button{
+  background: url(/images/group.png) no-repeat;
+  height: 157px;
+  width: 258px;
+  outline: none;
+  position: fixed;
+  z-index:100000;
+  bottom: 50px;
+  left: 45px;
+  border: none;
+  &:hover{
+    cursor: pointer;
+  }
+  &:active{
+    margin-bottom: -1px;
+  }
+}
+}
+
 .pep{
     position: absolute;
     top: -25px;

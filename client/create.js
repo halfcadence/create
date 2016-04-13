@@ -1,4 +1,6 @@
-Cursors = new Mongo.Collection("cursors"); //remove this line?
+Cursors = new Mongo.Collection("cursors");
+Cards = new Mongo.Collection("cards");
+
 let projectId;
 let userColor = 'black';
 Router.route('/', {
