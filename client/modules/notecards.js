@@ -82,6 +82,7 @@ let drawNoteCard = function(id, args){
     noteCard.focusDescriptionAndEnableLeftTriangle();
   });
   $(noteCard.div).pep({
+    cssEaseDuration: 100, //amount of time betwen stop and rest
     constrainTo: 'window',
     elementsWithInteraction: 'textarea',
     //detects mouseUp
@@ -98,7 +99,7 @@ let drawNoteCard = function(id, args){
         $set: {locationX: $(noteCard.div).position().left,
                locationY: $(noteCard.div).position().top}
       });
-      console.log("dragging pep to " + $(noteCard.div).position().left + ", " + $(noteCard.div).position().top);
+      //console.log("dragging pep to " + $(noteCard.div).position().left + ", " + $(noteCard.div).position().top);
       Modules.client.moveCaret(-100,-100); //kill the caret... eventually we need to figure out which text box it's in and move, etc...
     },
     rest: (function(ev) {
@@ -146,9 +147,10 @@ let drawNoteCard = function(id, args){
           // Cards.remove({_id : noteCard.id});
           Cards.update(noteCard.id, { //set position in database
             $set: {groupId : "trash",
-              locationX: $(document).width() + 10,
+              locationX: $(document).width() *2,
               locationY: 0}
           });
+          console.log("setting groupid and position in mongo");
         }
     })
   });
