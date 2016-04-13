@@ -99,7 +99,6 @@ let drawNoteCard = function(id, args){
         $set: {locationX: $(noteCard.div).position().left,
                locationY: $(noteCard.div).position().top}
       });
-      //console.log("dragging pep to " + $(noteCard.div).position().left + ", " + $(noteCard.div).position().top);
       Modules.client.moveCaret(-100,-100); //kill the caret... eventually we need to figure out which text box it's in and move, etc...
     },
     rest: (function(ev) {
@@ -115,7 +114,6 @@ let drawNoteCard = function(id, args){
         $set: {locationX: $(noteCard.div).position().left,
                locationY: $(noteCard.div).position().top}
       });
-      console.log("resting pep to " + $(noteCard.div).position().left + ", " + $(noteCard.div).position().top);
     }),
     stop: (function(ev) {
       //if mouseup when drag has not started
@@ -148,17 +146,24 @@ let drawNoteCard = function(id, args){
       let position = link.position(); //cache the position
       let right = $(window).width() - position.left - link.width();
       let bottom = $(window).height() - position.top - link.height();
-        if (bottom <=50 && right <= 50) {
-          // delete the card
-          // Cards.remove({_id : noteCard.id});
-          Cards.update(noteCard.id, { //set position in database
-            $set: {groupId : "trash",
-              locationX: $(document).width() *2,
-              locationY: 0}
-          });
-          noteCard.grouped = true; //workaround for rest bug
-          console.log("setting groupid and position in mongo");
-        }
+      if (bottom <=50 && right <= 50) {
+        // delete the card
+        // Cards.remove({_id : noteCard.id});
+        Cards.update(noteCard.id, { //set position in database
+          $set: {groupId : "trash",
+            locationX: 100000,
+            locationY: 0}
+        });
+        noteCard.grouped = true; //workaround for rest bug
+      }
+      else if (bottom <=50 && position.left <= 50) { //left corner group
+        Cards.update(noteCard.id, { //set position in database
+          $set: {groupId : "leftCornerGroup",
+            locationX: 100000,
+            locationY: 0}
+        });
+        noteCard.grouped = true; //workaround for rest bug
+      }
     })
   });
 }

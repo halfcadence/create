@@ -1,39 +1,67 @@
+let currentGroupId =  "";//hack so that removeAllFromGroup knows which groupId to target
+
 Template.application.events({ //events on the page body
   "click button.group": function (event) { //click on new button
     event.preventDefault(); //Prevent default browser form submit
+    showGroupedCards("leftCornerGroup");
   },
   "click button.red": function (event) { //click on new button
     event.preventDefault(); //Prevent default browser form submit
-    showTrashCards();
+    showGroupedCards("trash");
+  },
+  "click button.removeall": function (event) { //click on new button
+    event.preventDefault(); //Prevent default browser form submit
+    removeAllFromGroup(currentGroupId);
   }
 });
 
-let showTrashCards = function() {
-  //TODO: increase efficiency of query by adding {locationX: 1, locationY: 1}
-  //TODO: sort with find.sort and display in order
-  let trashCards = Cards.find({groupId: "trash"});
-  showVeil();
+//remove all cards from current group
+let removeAllFromGroup = function(groupId) {
+  if (!groupId) return;
+
+  //find all cards from mongo (to get the ids...) and update the positions
+  //there must be an easier way to do this
   drawPositions = makePlacementArray();
   let drawPositionIndex = 0;
-  trashCards.forEach(function(card) {
+  let groupedCards = Cards.find({groupId: groupId});
+  groupedCards.forEach(function(card) {
+    Cards.update(card._id, { //set position for all elements with groupId
+      $set: {groupId: "",
+        locationX: drawPositions[drawPositionIndex].x,
+        locationY: drawPositions[drawPositionIndex].y}
+    });
+    drawPositionIndex = (drawPositionIndex + 1 ) % drawPositions.length;
+  });
+  //hideVeil();
+}
+
+let showGroupedCards = function(groupId) {
+  currentGroupId = groupId;
+
+  //TODO: increase efficiency of query by adding {locationX: 1, locationY: 1}
+  //TODO: sort with find.sort and display in order
+  let groupedCards = Cards.find({groupId: groupId});
+  showVeil(groupId);
+  drawPositions = makePlacementArray();
+  let drawPositionIndex = 0;
+  groupedCards.forEach(function(card) {
     Modules.client.moveThing(document.getElementById(card._id), drawPositions[drawPositionIndex].x,drawPositions[drawPositionIndex].y);
     Modules.client.setZIndex(document.getElementById(card._id), 10000001); //set z index about veil
     drawPositionIndex = (drawPositionIndex + 1 ) % drawPositions.length;
-    console.log("moving trash card, db said it was at" + card.locationX + ", " + card.locationY);
   });
 }
 
 //shows the veil
 //it removes itself when clicked upon
-let showVeil = function () {
+let showVeil = function (groupId) {
   let veil = $(".veil");
   let x = $(".x");
   veil.css('visibility', "visible");
-  $(x).on( "click.veil", hideVeil); //turn on click events under validator namespace
+  $(x).on( "click.veil", function() {hideVeil(groupId)}); //turn on click events under validator namespace
   $(".pep").on( "mousedown.veil", groupPepOnClick);
 }
 
-let hideVeil = function () {
+let hideVeil = function (groupId) {
   //hide the veil
   let veil = $(".veil");
   veil.css('visibility', "hidden");
@@ -42,17 +70,19 @@ let hideVeil = function () {
   $( ".x" ).off( ".veil" );
   $(".pep").off( ".veil");
 
-  hideTrashCards();
+  //hide the cards with the veil
+  hideGroupedCards(groupId);
 }
 
-let hideTrashCards = function() {
-  let trashCards = Cards.find({groupId: "trash"});
+let hideGroupedCards = function(groupId) {
+  let trashCards = Cards.find({groupId: groupId});
   trashCards.forEach(function(card) {
     //move each card in the group to its dB position
     //this will avoid the element taken out of the group
     //even if it hasn't set its group name to "" yet
     Modules.client.moveThing(document.getElementById(card._id), card.locationX, card.locationY);
   });
+  currentGroupId = "";
 }
 
 //a pep in a group was clicked

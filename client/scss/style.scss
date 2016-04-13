@@ -256,20 +256,34 @@ body {
   overflow: hidden;
   visibility: hidden;
   button{
-    background: url(/images/x.png) no-repeat;
-    top:20px;
-    right: 20px;
-    height: 60px;
-    width: 60px;
     outline: none;
     border:none;
     position: absolute;
     z-index:10000002;
+    &.x{
+      background: url(/images/x.png) no-repeat;
+      top:20px;
+      right: 20px;
+      height: 60px;
+      width: 60px;
+    }
+    &:active{
+      margin-top: 1px;
+    }
+    &.removeall{
+      background: url(/images/removeAllText.png) no-repeat;
+      margin: 0 auto;
+      left:0;
+      right:0;
+      bottom:50px;
+      height: 36px;
+      width: 339px;
+    }
     &:hover{
       cursor: pointer;
     }
     &:active{
-      margin-top: 1px;
+      margin-bottom: -1px;
     }
   }
 }
