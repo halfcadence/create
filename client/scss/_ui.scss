@@ -64,6 +64,7 @@
     border: none;
     &:hover{
       cursor: pointer;
+      background: url(/images/trashcanfilled.png) no-repeat;
     }
     &:active{
       margin-bottom: -1px;
