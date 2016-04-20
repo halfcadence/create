@@ -14,6 +14,7 @@ let startNotecardTracker = () => {
       arguments.cost = fields.cost;
       arguments.priority = fields.priority;
       arguments.position = fields.position;
+      arguments.zIndex = fields.zIndex;
 
       //draw the card
       Modules.client.drawNoteCard(id, arguments);
@@ -33,6 +34,8 @@ let startNotecardTracker = () => {
         $(document.getElementById(id)).children('.priority').val(fields.priority);
       if (fields.groupId !== undefined)
         setPositionBasedOnGroupChange(id, fields.groupId);
+      if (fields.zIndex !== undefined)
+        $(document.getElementById(id)).css('z-index',fields.zIndex);
       /*
       if (fields.position !== undefined) {
         if (fields.position === "left")

@@ -32,7 +32,6 @@ let removeAllFromGroup = function(groupId) {
     });
     drawPositionIndex = (drawPositionIndex + 1 ) % drawPositions.length;
   });
-  //hideVeil();
 }
 
 let showGroupedCards = function(groupId) {
@@ -46,7 +45,7 @@ let showGroupedCards = function(groupId) {
   let drawPositionIndex = 0;
   groupedCards.forEach(function(card) {
     Modules.client.moveThing(document.getElementById(card._id), drawPositions[drawPositionIndex].x,drawPositions[drawPositionIndex].y);
-    Modules.client.setZIndex(document.getElementById(card._id), 10000001); //set z index about veil
+    Modules.client.setZIndex(document.getElementById(card._id), 10000001); //set z index above veil
     drawPositionIndex = (drawPositionIndex + 1 ) % drawPositions.length;
   });
 }

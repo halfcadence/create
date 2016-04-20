@@ -1,16 +1,18 @@
 let currentFocus = null //the textarea focused on
 let currentEnabled = null
 let enabledTriangle = null
-let maxZIndex = 0;
+
 //new button
 Template.application.events({ //events on the page body
   "click button.blue": function (event) { //click on new button
     event.preventDefault(); // Prevent default browser form submit
-    makeNewNoteCard();
+    Meteor.call("getNextZIndex", Modules.client.getProjectId(), function(error, result) {
+      makeNewNoteCard(result);
+    });
   }
 });
 
-let makeNewNoteCard = function() {
+let makeNewNoteCard = function(zIndex) {
   var id = Cards.insert({
         projectId: Modules.client.getProjectId(),
         title: "",
@@ -21,7 +23,8 @@ let makeNewNoteCard = function() {
         cost: "",
         priority: "",
         position: "left",
-        groupId: ""
+        groupId: "",
+        zIndex: zIndex
   });
 }
 
@@ -38,8 +41,14 @@ let drawNoteCard = function(id, args){
   $(noteCard.implementation).val(arguments.body2 || "");
   $(noteCard.cost).val(arguments.cost || "");
   $(noteCard.priority).val(arguments.priority || "");
+
+  //set z-index
+  $(noteCard.div).css('z-index', arguments.zIndex || 100);
+
+  //set position
   if (arguments.position === "right")
     noteCard.slide("left");
+
   //add functions to update database
   noteCard.input.oninput = function() {
     Cards.update(id, {
@@ -217,7 +226,13 @@ let Notecard = function() {
 Notecard.prototype = {
   constructor: Notecard,
   goToTop: function() {
-    $(this.div).css('z-index', ++maxZIndex);
+    let that = this;
+    Meteor.call("getNextZIndex", Modules.client.getProjectId(), function(error, result) {
+      console.log("setting z index to " + result);
+      Cards.update(that.id, { //set z index in database
+        $set: {zIndex : result}
+      });
+    });
   },
   slide: function(direction) {
     if (direction === "left") {

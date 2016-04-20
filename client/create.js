@@ -1,5 +1,6 @@
 Cursors = new Mongo.Collection("cursors");
 Cards = new Mongo.Collection("cards");
+Settings = new Mongo.Collection("settings");
 
 let projectId;
 let userColor = 'black';
@@ -25,6 +26,9 @@ Router.route('/:_id', {
     });
     Meteor.subscribe('Cursors', filter, function(){
       Modules.client.startCursorTracker();
+    });
+    Meteor.subscribe('Settings', filter, function(){
+      Modules.client.startSettingsTracker();
     });
   }
 });
