@@ -15,7 +15,7 @@ let startNotecardTracker = () => {
       arguments.priority = fields.priority;
       arguments.position = fields.position;
       arguments.zIndex = fields.zIndex;
-
+      updateGroupIcons(fields.groupId);
       //draw the card
       Modules.client.drawNoteCard(id, arguments);
     },
@@ -47,11 +47,14 @@ let startNotecardTracker = () => {
     },
     removed: function (id) {
       removeThing(document.getElementById(id));
+      updateEmptyGroupIcons();
     }
   });
 };
 
 let updateGroupIcons = function(groupId){
+   if (groupId === undefined) return;
+
    if (groupId === "") { // card was moved resulting in it being not in a group
      updateEmptyGroupIcons();
    }

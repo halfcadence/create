@@ -1,6 +1,6 @@
 let currentGroupId =  ""; //hack so that removeAllFromGroup knows which groupId to target
 
-let groupNames = ["leftCornerGroup", "topMiddleGroup", "bottomMiddleGroup", "trash"];
+let groupNames = ["leftCornerGroup", "topMiddleGroup", "rightCornerGroup", "bottomMiddleGroup", "trash"];
 
 Template.application.events({ //events on the page body
   "click button.group#leftCornerGroup": function (event) {
