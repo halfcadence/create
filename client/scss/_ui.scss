@@ -62,9 +62,11 @@
     bottom: 50px;
     right: 45px;
     border: none;
+    &.filled{
+      background: url(/images/trashcanfilled.png) no-repeat;
+    }
     &:hover{
       cursor: pointer;
-      background: url(/images/trashcanfilled.png) no-repeat;
     }
     &:active{
       margin-bottom: -1px;
@@ -80,9 +82,10 @@
     outline: none;
     position: fixed;
     z-index:1000000;
-    bottom: 50px;
-    left: 45px;
     border: none;
+    &.filled{
+      background: url(/images/groupfilled.png) no-repeat;
+    }
     &:hover{
       cursor: pointer;
     }
@@ -92,6 +95,26 @@
   }
 }
 
+#leftCornerGroup{
+  bottom: 50px;
+  left: 45px;
+}
+#rightCornerGroup{
+  top: 50px;
+  right: 45px;
+}
+#topMiddleGroup{
+  margin: 0 auto;
+  left:0;
+  right:0;
+  top:50px;
+}
+#bottomMiddleGroup{
+  margin: 0 auto;
+  left:0;
+  right:0;
+  bottom:50px;
+}
 .veil {
   position: absolute;
   top: 25px;

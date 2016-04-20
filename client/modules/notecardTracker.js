@@ -33,7 +33,7 @@ let startNotecardTracker = () => {
       if (fields.priority !== undefined)
         $(document.getElementById(id)).children('.priority').val(fields.priority);
       if (fields.groupId !== undefined)
-        setPositionBasedOnGroupChange(id, fields.groupId);
+        updateGroupIcons(fields.groupId);
       if (fields.zIndex !== undefined)
         $(document.getElementById(id)).css('z-index',fields.zIndex);
       /*
@@ -51,12 +51,28 @@ let startNotecardTracker = () => {
   });
 };
 
-let setPositionBasedOnGroupChange = function(cardId, groupId){
-   if (groupId === "") { //no group
+let updateGroupIcons = function(groupId){
+   if (groupId === "") { // card was moved resulting in it being not in a group
+     updateEmptyGroupIcons();
    }
-   else { //item was put in a group, move it out of sight
+   else {
+     updateFilledGroupIcons(groupId);
    }
 };
+
+let updateEmptyGroupIcons = function() {
+  let groupNames = Modules.client.getGroupNames();
+  groupNames.forEach(function(name) {
+    if (Cards.findOne({groupId:name}) === undefined) {// no card with the group id
+      console.log(name + " is an empty group.");
+      $('#' + name).removeClass('filled');
+    }
+  });
+}
+
+let updateFilledGroupIcons = function(groupId) {
+  $('#' + groupId).addClass('filled');
+}
 
 let removeThing = function(thing){
    $(thing).remove();

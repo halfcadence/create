@@ -1,24 +1,42 @@
-let currentGroupId =  "";//hack so that removeAllFromGroup knows which groupId to target
+let currentGroupId =  ""; //hack so that removeAllFromGroup knows which groupId to target
+
+let groupNames = ["leftCornerGroup", "topMiddleGroup", "bottomMiddleGroup", "trash"];
 
 Template.application.events({ //events on the page body
-  "click button.group": function (event) { //click on new button
+  "click button.group#leftCornerGroup": function (event) {
     event.preventDefault(); //Prevent default browser form submit
     showGroupedCards("leftCornerGroup");
   },
-  "click button.red": function (event) { //click on new button
-    event.preventDefault(); //Prevent default browser form submit
+  "click button.group#topMiddleGroup": function (event) {
+    event.preventDefault();
+    showGroupedCards("topMiddleGroup");
+  },
+  "click button.group#bottomMiddleGroup": function (event) {
+    event.preventDefault();
+    showGroupedCards("bottomMiddleGroup");
+  },
+  "click button.group#rightCornerGroup": function (event) {
+    event.preventDefault();
+    showGroupedCards("rightCornerGroup");
+  },
+  "click button.red": function (event) { //delete button
+    event.preventDefault();
     showGroupedCards("trash");
   },
-  "click button.removeall": function (event) { //click on new button
-    event.preventDefault(); //Prevent default browser form submit
-    removeAllFromGroup(currentGroupId);
+  "click button.removeall": function (event) { //"empty group" button
+    event.preventDefault();
+    Meteor.call("getNextZIndex", Modules.client.getProjectId(), function(error, result) {
+      //remove all from the group,
+      //use z-index to replace the notecards on the table
+      removeAllFromGroup(currentGroupId,result);
+    });
   }
 });
 
 //remove all cards from current group
-let removeAllFromGroup = function(groupId) {
+let removeAllFromGroup = function(groupId, zIndex) {
   if (!groupId) return;
-
+  zIndex = zIndex || 100;
   //find all cards from mongo (to get the ids...) and update the positions
   //there must be an easier way to do this
   drawPositions = makePlacementArray();
@@ -28,7 +46,8 @@ let removeAllFromGroup = function(groupId) {
     Cards.update(card._id, { //set position for all elements with groupId
       $set: {groupId: "",
         locationX: drawPositions[drawPositionIndex].x,
-        locationY: drawPositions[drawPositionIndex].y}
+        locationY: drawPositions[drawPositionIndex].y,
+        zIndex: zIndex}
     });
     drawPositionIndex = (drawPositionIndex + 1 ) % drawPositions.length;
   });
@@ -109,3 +128,9 @@ let makePlacementArray = function() {
   ];
   return drawPositions;
 }
+
+let getGroupNames = function() {
+  return groupNames;
+}
+
+Modules.client.getGroupNames = getGroupNames;

@@ -116,13 +116,13 @@ let drawNoteCard = function(id, args){
 
       //second half of rest bug workaround
       if (noteCard.grouped) {
-        noteCard.grouped = false;
-        return;
+        noteCard.grouped = false; //reset grouped so that resting works in the future
+        return; // prevent position from being set while trying to fly to x=1000 for group
       }
       Cards.update(id, { //set position in database
         $set: {locationX: $(noteCard.div).position().left,
               locationY: $(noteCard.div).position().top,
-              groupId: ""}
+              groupId: ""} //if we rest and haven't been put into a group, take us out of group
       });
     }),
     stop: (function(ev) {
@@ -159,20 +159,28 @@ let drawNoteCard = function(id, args){
       if (bottom <=50 && right <= 50) {
         // delete the card
         // Cards.remove({_id : noteCard.id});
-        Cards.update(noteCard.id, { //set position in database
-          $set: {groupId : "trash",
-            locationX: 100000,
-            locationY: 0}
-        });
+        addToGroup(noteCard.id, "trash");
         noteCard.grouped = true; //workaround for rest bug
       }
       else if (bottom <=50 && position.left <= 50) { //left corner group
-        Cards.update(noteCard.id, { //set position in database
-          $set: {groupId : "leftCornerGroup",
-            locationX: 100000,
-            locationY: 0}
-        });
-        noteCard.grouped = true; //workaround for rest bug
+        addToGroup(noteCard.id, "leftCornerGroup");
+        noteCard.grouped = true;
+      }
+      else if (position.top <=50 && right <= 50) { //left corner group
+        addToGroup(noteCard.id, "rightCornerGroup");
+        noteCard.grouped = true;
+      }
+      else if (bottom <=50 //we really need a real collision engine T.T
+        && position.left >= $(window).width()/2 - 300 //left corner is past middle - 300px
+        && position.left + 500 <= $(window).width()/2 + 300 ) { //right corner is before middle + 300px
+        addToGroup(noteCard.id, "bottomMiddleGroup");
+        noteCard.grouped = true;
+      }
+      else if (position.top <=50 //we really need a real collision engine T.T
+        && position.left >= $(window).width()/2 - 300 //left corner is past middle - 300px
+        && position.left + 500 <= $(window).width()/2 + 300 ) { //right corner is before middle + 300px
+        addToGroup(noteCard.id, "topMiddleGroup");
+        noteCard.grouped = true;
       }
     })
   });
@@ -228,7 +236,6 @@ Notecard.prototype = {
   goToTop: function() {
     let that = this;
     Meteor.call("getNextZIndex", Modules.client.getProjectId(), function(error, result) {
-      console.log("setting z index to " + result);
       Cards.update(that.id, { //set z index in database
         $set: {zIndex : result}
       });
@@ -319,6 +326,15 @@ let FindLocationOnObject = function(ev) {
     x,
     y
   };
+}
+
+//add a card to a group in the database
+let addToGroup = function(cardId, groupName) {
+  Cards.update(cardId, { //set position in database
+    $set: {groupId : groupName,
+      locationX: 100000,
+      locationY: 0}
+  });
 }
 
 Modules.client.drawNoteCard = drawNoteCard;
