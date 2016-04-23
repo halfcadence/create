@@ -75,8 +75,8 @@ let showVeil = function (groupId) {
   let veil = $(".veil");
   let x = $(".x");
   veil.css('visibility', "visible");
-  $(x).on( "click.veil", function() {hideVeil(groupId)}); //turn on click events under validator namespace
-  $(".pep").on( "mousedown.veil", groupPepOnClick);
+  $(x).on( "click.veil", function() {hideVeil(groupId)});
+  $(".pep").on( "mousedown.veil", ungroupPepOnClick);
 }
 
 let hideVeil = function (groupId) {
@@ -105,7 +105,7 @@ let hideGroupedCards = function(groupId) {
 
 //a pep in a group was clicked
 //remove it from the group, then hide veil
-let groupPepOnClick = function() {
+let ungroupPepOnClick = function() {
   Cards.update(this.id, { //set position in database
     $set: {groupId : ""}
   });

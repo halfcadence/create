@@ -166,7 +166,7 @@ let drawNoteCard = function(id, args){
         addToGroup(noteCard.id, "leftCornerGroup");
         noteCard.grouped = true;
       }
-      else if (position.top <=50 && right <= 50) { //left corner group
+      else if (position.top <=50 && right <= 50) { //right corner group
         addToGroup(noteCard.id, "rightCornerGroup");
         noteCard.grouped = true;
       }
@@ -333,7 +333,8 @@ let addToGroup = function(cardId, groupName) {
   Cards.update(cardId, { //set position in database
     $set: {groupId : groupName,
       locationX: 100000,
-      locationY: 0}
+      locationY: 0
+    }
   });
 }
 
