@@ -45,7 +45,8 @@ let initializeVariables = function() {
   menuItems = menu.querySelectorAll(".context-menu__item");
 }
 
-//Listens for contextmenu events.
+//Listens for click events on the document body and
+//checks whether they are inside a taskItem
 let contextListener = function() {
     $(document).on('contextmenu', function(e) {
     taskItemInContext = clickInsideElement( e, taskItemClassName );
@@ -60,14 +61,14 @@ let contextListener = function() {
   });
 }
 
-//Listens for click events.
+//Listens for click events on the context menu
 let clickListener = function() {
   $(document).on( "click", function(e) {
     let clickeElIsLink = clickInsideElement( e, contextMenuLinkClassName );
 
     if ( clickeElIsLink ) {
       e.preventDefault();
-      menuItemListener( clickeElIsLink );
+      menuItemListener( clickeElIsLink , e);
     } else {
       let button = e.which || e.button;
       if ( button === 1 ) {
@@ -176,8 +177,20 @@ let positionMenu = function(e){
 }
 
 //Dummy action function that logs an action when a menu item link is clicked
-let menuItemListener = function (link) {
-  console.log( "Task ID - " + taskItemInContext.getAttribute("data-id") + ", Task action - " + link.getAttribute("data-action"));
+let menuItemListener = function (link, event) {
+  switch (link.getAttribute("data-action")) {
+    case "Split":
+      //console.log()
+      break;
+    case "Merge":
+      console.log("Merging");
+      break;
+    case "History":
+      console.log("Showing History");
+      break;
+    default:
+      throw "Invalid action from context menu.";
+  }
   toggleMenuOff();
 }
 
