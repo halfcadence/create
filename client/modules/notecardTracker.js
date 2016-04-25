@@ -67,7 +67,6 @@ let updateEmptyGroupIcons = function() {
   let groupNames = Modules.client.getGroupNames();
   groupNames.forEach(function(name) {
     if (Cards.findOne({groupId:name}) === undefined) {// no card with the group id
-      console.log(name + " is an empty group.");
       $('#' + name).removeClass('filled');
     }
   });

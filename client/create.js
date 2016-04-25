@@ -29,6 +29,12 @@ Router.route('/:_id', {
   }
 });
 
+//callback for rendered application
+Template.application.rendered = function() {
+  //needs context menu to be rendered to query it
+  Modules.client.startContextMenu();
+}
+
 Modules.client.getProjectId = function() {
   return projectId;
 };
