@@ -1,0 +1,50 @@
+<template name="application">
+  <body>
+    <div class='create'>
+      <button class='blue'>
+        <span class='blue'>new</span>
+      </button>
+    </div>
+    <div class='del'>
+      <button class='red' id="trash">
+      </button>
+    </div>
+    <div class='group'>
+      <button class='group' id="leftCornerGroup">
+      </button>
+    </div>
+    <div class='group'>
+      <button class='group' id="rightCornerGroup">
+      </button>
+    </div>
+    <div class='group'>
+      <button class='group' id="bottomMiddleGroup">
+      </button>
+    </div>
+    <div class='group'>
+      <button class='group' id="topMiddleGroup">
+      </button>
+    </div>
+    <div class='veil'>
+      <button class='x'>
+      </button>
+      <button class='removeall'>
+      </button>
+    </div>
+
+    <nav id="context-menu" class="context-menu">
+    <ul class="context-menu__items">
+      <li class="context-menu__item">
+        <a href="#" class="context-menu__link" data-action="View"><i class="fa fa-eye"></i> View Task</a>
+      </li>
+      <li class="context-menu__item">
+        <a href="#" class="context-menu__link" data-action="Edit"><i class="fa fa-edit"></i> Edit Task</a>
+      </li>
+      <li class="context-menu__item">
+        <a href="#" class="context-menu__link" data-action="Delete"><i class="fa fa-times"></i> Delete Task</a>
+      </li>
+    </ul>
+  </nav>
+
+  </body>
+</template>
