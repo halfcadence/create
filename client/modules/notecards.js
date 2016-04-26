@@ -104,6 +104,10 @@ let drawNoteCard = function(id, args){
     startThreshold: [25, 25],
     initiate: function() {
       noteCard.goToTop();
+      Cards.update(id, { //set position in database...TODO: optimize this a bit with an interval
+        $set: {locationX: $(noteCard.div).position().left,
+               locationY: $(noteCard.div).position().top}
+      });
     },
     drag: function(ev, obj){
       Cards.update(id, { //set position in database...TODO: optimize this a bit with an interval

@@ -106,8 +106,26 @@ let hideGroupedCards = function(groupId) {
 //a pep in a group was clicked
 //remove it from the group, then hide veil
 let ungroupPepOnClick = function() {
-  Cards.update(this.id, { //set position in database
-    $set: {groupId : ""}
+  // we need to explicitly set location and z index
+  // because we relied on moving the pep to set it
+  // but if it's right clicked somehow it doesn't trigger
+  // the normal pep movement stuff
+  let that = this;
+  Cards.update(that.id, { //immediately set database position and remove from group
+    $set: {
+      groupId : "",
+      locationX: $(that).position().left,
+      locationY: $(that).position().top
+    }
+  });
+
+  //find the next z-index and set it
+  Meteor.call("getNextZIndex", Modules.client.getProjectId(), function(error, result) {
+    Cards.update(that.id, { //set position in database
+      $set: {
+        zIndex:result
+      }
+    });
   });
   hideVeil(currentGroupId);
 }
