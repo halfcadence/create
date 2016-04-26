@@ -278,19 +278,34 @@ $(document).on('click', function(event) {
   }
 });
 
+//split a notecard
 let splitNoteCard = function(cardId) {
-  console.log("Splitting card with ID " + cardId);
-  let card = Cards.findOne({_id: cardId},{fields:{ _id: 0}}); //find a card with the id, but don't return it
+  let card = Cards.findOne({_id: cardId}); //find a card with the id
+  if (!card) {
+    console.log("couldn't find the card to be split");
+    return;
+  }
+
   Cards.remove({_id: cardId}); //remove the old card
+  let ghostcard = $.extend(true,{},card); //store a version of the card to be ghosted later
 
+  //add the two new cards
+  card.parent = card._id;
+  delete card._id; //remove id from card
   let centerPosition = card.locationX + cardWidth/2; //the position between the two new cards
-
   //insert a card one card width left of center
   card.locationX = centerPosition - cardWidth - 5;
-  Cards.insert(card);
+  let leftChildId = Cards.insert(card);
   //put the second card at center
   card.locationX = centerPosition + 5;
-  Cards.insert(card);
+  let rightChildId = Cards.insert(card);
+
+  //add the card to ghostcards to be tracked
+  //with reference to its children
+  ghostcard.children = [];
+  ghostcard.children.push(leftChildId);
+  ghostcard.children.push(rightChildId);
+  GhostCards.insert(ghostcard);
 }
 
 /*----------------
