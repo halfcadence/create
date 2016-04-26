@@ -145,7 +145,6 @@ let toggleMenuOn = function() {
   if ( menuState !== 1 ) {
     menuState = 1;
     menu.classList.add( contextMenuActive );
-    turnMergeMenuOff(); //make sure we are in the default menu
   }
 }
 
@@ -154,7 +153,13 @@ let toggleMenuOff = function() {
   if ( menuState !== 0 ) {
     menuState = 0;
     menu.classList.remove( contextMenuActive );
+    stopAnticipatingMerge();
   }
+}
+
+let stopAnticipatingMerge = function() {
+  turnMergeMenuOff(); //make sure we are in the default menu
+  $(".pep").off( ".merge"); //remove merge listener
 }
 
 //Positions the menu properly.
@@ -190,7 +195,7 @@ let menuItemListener = function (link, event) {
       toggleMenuOff();
       break;
     case "Merge":
-      anticipateMerge();
+      anticipateMerge($(taskItemInContext).attr('id'));
       break;
     case "History":
       console.log("Showing History");
@@ -202,8 +207,13 @@ let menuItemListener = function (link, event) {
   }
 }
 
-let anticipateMerge = function() {
-  turnMergeMenuOn();
+//anticipate a merge
+//cardId: the card clicked which may possibly be merged
+let anticipateMerge = function(cardId) {
+  turnMergeMenuOn(); //show the merge menu
+  $(".pep").on( "click.merge", function(event) {
+    Modules.client.mergeNoteCards([cardId,$(this).attr("id")]);
+  });
 }
 
 let turnMergeMenuOff = function() {

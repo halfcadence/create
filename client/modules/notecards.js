@@ -290,7 +290,7 @@ let splitNoteCard = function(cardId) {
   let ghostcard = $.extend(true,{},card); //store a version of the card to be ghosted later
 
   //add the two new cards
-  card.parent = card._id;
+  card.parents = [card._id];
   delete card._id; //remove id from card
   let centerPosition = card.locationX + cardWidth/2; //the position between the two new cards
   //insert a card one card width left of center
@@ -308,9 +308,48 @@ let splitNoteCard = function(cardId) {
 
 //merge cards given in argument
 let mergeNoteCards = function(cardIds) {
-  if (!cardIds || cardIds.length != 2) {
-    throw "invalid number of cards to be merged"
+  if (!cardIds || cardIds.length != 2)
+    throw "invalid number of cards to be merged";
+  if (cardIds[0] === cardIds[1]) //if the same card was clicked twice
+    return;
+  console.log("merging " + cardIds[0] + " and " + cardIds[1]);
+
+  //find the cards in the database
+  let cardA = Cards.findOne({_id: cardIds[0]});
+  let cardB = Cards.findOne({_id: cardIds[1]});
+  if (!(cardA && cardB)) {
+    console.log("couldn't find all of the cards to be split");
+    return;
   }
+
+  let newCard = $.extend(true,{},cardA); //make a new version of the card
+  delete newCard._id;
+
+  //merge fields
+  //only append if second card has fields filled
+  if (cardB.title) newCard.title = cardA.title + " " + cardB.title;
+  if (cardB.body) newCard.body = cardA.body + "\n" + cardB.body;
+  if (cardB.body2) newCard.body2 = cardA.body2 + "\n" + cardB.body2;
+  if (cardB.cost) newCard.cost = cardA.cost + " " + cardB.cost;
+  if (cardB.priority) newCard.priority = cardA.priority + " " + cardB.priority;
+
+  //set location between the cards
+  newCard.locationX = (cardA.locationX + cardB.locationX)/2;
+  newCard.locationY = (cardA.locationY + cardB.locationY)/2;
+
+  //set parents
+  newCard.parents = [cardIds[0], cardIds[1]];
+  let newCardId = Cards.insert(newCard);
+
+  //remove the old cards
+  Cards.remove({_id: cardIds[0]});
+  Cards.remove({_id: cardIds[1]});
+
+  cardA.children = newCardId;
+  cardB.children = newCardId;
+
+  GhostCards.insert(cardA);
+  GhostCards.insert(cardB);
 }
 
 /*----------------
