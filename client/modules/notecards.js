@@ -1,6 +1,8 @@
 let currentFocus = null //the textarea focused on
 let currentEnabled = null
 let enabledTriangle = null
+let cardWidth = 500;
+let cardHeight = 300;
 
 //new button
 Template.application.events({ //events on the page body
@@ -276,6 +278,21 @@ $(document).on('click', function(event) {
   }
 });
 
+let splitNoteCard = function(cardId) {
+  console.log("Splitting card with ID " + cardId);
+  let card = Cards.findOne({_id: cardId},{fields:{ _id: 0}}); //find a card with the id, but don't return it
+  Cards.remove({_id: cardId}); //remove the old card
+
+  let centerPosition = card.locationX + cardWidth/2; //the position between the two new cards
+
+  //insert a card one card width left of center
+  card.locationX = centerPosition - cardWidth - 5;
+  Cards.insert(card);
+  //put the second card at center
+  card.locationX = centerPosition + 5;
+  Cards.insert(card);
+}
+
 /*----------------
   helper functions
   ----------------*/
@@ -339,3 +356,4 @@ let addToGroup = function(cardId, groupName) {
 }
 
 Modules.client.drawNoteCard = drawNoteCard;
+Modules.client.splitNoteCard = splitNoteCard;

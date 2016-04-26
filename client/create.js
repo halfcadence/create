@@ -1,5 +1,6 @@
 Cursors = new Mongo.Collection("cursors");
 Cards = new Mongo.Collection("cards");
+GhostCards = new Mongo.Collection("ghostcards");
 
 let projectId;
 let userColor = 'black';

@@ -48,7 +48,7 @@ let initializeVariables = function() {
 //Listens for click events on the document body and
 //checks whether they are inside a taskItem
 let contextListener = function() {
-    $(document).on('contextmenu', function(e) {
+  $(document).on('contextmenu', function(e) {
     taskItemInContext = clickInsideElement( e, taskItemClassName );
     if ( taskItemInContext ) {
       e.preventDefault();
@@ -180,7 +180,7 @@ let positionMenu = function(e){
 let menuItemListener = function (link, event) {
   switch (link.getAttribute("data-action")) {
     case "Split":
-      //console.log()
+      Modules.client.splitNoteCard($(taskItemInContext).attr('id'));
       break;
     case "Merge":
       console.log("Merging");
