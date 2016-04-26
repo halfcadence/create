@@ -15,6 +15,7 @@ let clickCoordsY;
 let menu;
 let menuItems;
 let menuState;
+let mergeMenuOn;
 let menuWidth;
 let menuHeight;
 let menuPosition;
@@ -26,6 +27,9 @@ let windowHeight;
 
 let startContextMenu = function() {
   initializeVariables();
+  //remove extra menu items
+  $(menuItems[3]).remove();
+  $(menuItems[4]).remove();
   contextListener();
   clickListener();
   keyupListener();
@@ -40,6 +44,7 @@ let initializeVariables = function() {
 
   taskItemClassName = "pep";
   menuState = 0;
+  mergeMenuOn = false;
 
   menu = document.querySelector("#context-menu");
   menuItems = menu.querySelectorAll(".context-menu__item");
@@ -140,6 +145,7 @@ let toggleMenuOn = function() {
   if ( menuState !== 1 ) {
     menuState = 1;
     menu.classList.add( contextMenuActive );
+    turnMergeMenuOff(); //make sure we are in the default menu
   }
 }
 
@@ -181,17 +187,49 @@ let menuItemListener = function (link, event) {
   switch (link.getAttribute("data-action")) {
     case "Split":
       Modules.client.splitNoteCard($(taskItemInContext).attr('id'));
+      toggleMenuOff();
       break;
     case "Merge":
-      console.log("Merging");
+      anticipateMerge();
       break;
     case "History":
       console.log("Showing History");
+      toggleMenuOff();
       break;
     default:
       throw "Invalid action from context menu.";
+      toggleMenuOff();
   }
-  toggleMenuOff();
+}
+
+let anticipateMerge = function() {
+  turnMergeMenuOn();
+}
+
+let turnMergeMenuOff = function() {
+  if (!mergeMenuOn)
+    return;
+  //remove current list items
+  $(menuItems[3]).remove();
+  $(menuItems[4]).remove();
+  //add new list items
+  $(menu).append(menuItems[0]);
+  $(menu).append(menuItems[1]);
+  $(menu).append(menuItems[2]);
+  mergeMenuOn = false;
+}
+
+let turnMergeMenuOn = function() {
+  if (mergeMenuOn)
+    return;
+  //remove current list items
+  $(menuItems[0]).remove();
+  $(menuItems[1]).remove();
+  $(menuItems[2]).remove();
+  //add new list items
+  $(menu).append(menuItems[3]);
+  $(menu).append(menuItems[4]);
+  mergeMenuOn = true;
 }
 
 Modules.client.startContextMenu = startContextMenu;

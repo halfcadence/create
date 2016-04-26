@@ -20,6 +20,28 @@
   background-color: $pep-color;
 }
 
+.context-menu__description {
+  display: block;
+  padding: 4px 12px;
+  color: #000000;
+  background-color: $pep-color;
+  text-decoration: none;
+}
+
+.context-menu__cancel {
+  display: block;
+  padding: 4px 12px;
+  text-align: right;
+  color: $button-red;
+  background-color: $pep-color;
+  text-decoration: none;
+}
+
+.context-menu__cancel:hover {
+  color: $pep-color;
+  background-color: $button-red;
+}
+
 .context-menu__item {
   display: block;
   font-size: 1.5em;

@@ -302,10 +302,15 @@ let splitNoteCard = function(cardId) {
 
   //add the card to ghostcards to be tracked
   //with reference to its children
-  ghostcard.children = [];
-  ghostcard.children.push(leftChildId);
-  ghostcard.children.push(rightChildId);
+  ghostcard.children = [leftChildId, rightChildId];
   GhostCards.insert(ghostcard);
+}
+
+//merge cards given in argument
+let mergeNoteCards = function(cardIds) {
+  if (!cardIds || cardIds.length != 2) {
+    throw "invalid number of cards to be merged"
+  }
 }
 
 /*----------------
@@ -372,3 +377,4 @@ let addToGroup = function(cardId, groupName) {
 
 Modules.client.drawNoteCard = drawNoteCard;
 Modules.client.splitNoteCard = splitNoteCard;
+Modules.client.mergeNoteCards = mergeNoteCards;
