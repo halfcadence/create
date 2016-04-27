@@ -24,8 +24,8 @@ let startHistoryTracker = function() {
         changeDisplayName(id, fields.title);
     },
     removed: function (id, fields) {
-      removeOutgoingAndIncomingEdges(id);
-      removeNode(id);
+      removeOutgoingAndIncomingEdges(id); //remove all related edges
+      removeNode(id); //remove node
     }
   });
 
@@ -47,6 +47,8 @@ let startHistoryTracker = function() {
         changeDisplayName(id, fields.title);
     },
     removed: function (id) {
+      //don't mess with the edges, we will probably still need them
+      //because the ghost card has the same id
       removeNode(id);
     }
   });
@@ -82,9 +84,13 @@ let addUniqueNode = function(id, displayName) {
 
 //remove edges outgoing from source
 let removeOutgoingAndIncomingEdges = function(id){
+  console.log("search id: " + id + ". length of edges is " + edges.length);
   for (let i = 0; i < edges.length; i++) { //go through the edges
-    if (edges[i].data.source === id || edges[i].data.target === id) //if node begins or ends with source
-      edges.splice(i,1); //remove it
+    console.log("search id: " + id + ". found edge with source " + edges[i].data.source + " and target " + edges[i].data.target);
+    if (edges[i].data.source === id || edges[i].data.target === id) {//if node begins or ends with source
+      console.log("search id: " + id + ". removing edge with source " + edges[i].data.source + " and target " + edges[i].data.target);
+      edges.splice(i--,1); //remove it, we have to decrement counter so that search proceeds correctly
+    }
   }
 }
 
