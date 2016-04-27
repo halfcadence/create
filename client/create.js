@@ -27,6 +27,9 @@ Router.route('/:_id', {
     Meteor.subscribe('Cursors', filter, function(){
       Modules.client.startCursorTracker();
     });
+    Meteor.subscribe('GhostCards', filter, function(){
+      Modules.client.startHistoryTracker();
+    });
   }
 });
 

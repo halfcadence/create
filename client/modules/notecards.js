@@ -316,8 +316,7 @@ let mergeNoteCards = function(cardIds) {
     throw "invalid number of cards to be merged";
   if (cardIds[0] === cardIds[1]) //if the same card was clicked twice
     return;
-  console.log("merging " + cardIds[0] + " and " + cardIds[1]);
-
+    
   //find the cards in the database
   let cardA = Cards.findOne({_id: cardIds[0]});
   let cardB = Cards.findOne({_id: cardIds[1]});
@@ -349,8 +348,8 @@ let mergeNoteCards = function(cardIds) {
   Cards.remove({_id: cardIds[0]});
   Cards.remove({_id: cardIds[1]});
 
-  cardA.children = newCardId;
-  cardB.children = newCardId;
+  cardA.children = [newCardId];
+  cardB.children = [newCardId];
 
   GhostCards.insert(cardA);
   GhostCards.insert(cardB);

@@ -198,7 +198,7 @@ let menuItemListener = function (link, event) {
       anticipateMerge($(taskItemInContext).attr('id'));
       break;
     case "History":
-      console.log("Showing History");
+      Modules.client.showHistory();
       toggleMenuOff();
       break;
     default:

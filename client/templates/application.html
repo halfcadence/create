@@ -32,6 +32,8 @@
       </button>
     </div>
 
+    {{>history}}
+
     <nav id="context-menu" class="context-menu">
     <ul class="context-menu__items">
       <li class="context-menu__item">
@@ -53,4 +55,9 @@
   </nav>
 
   </body>
+</template>
+
+<template name="history">
+  <button class='x cy'></button>
+  <div id="cy" class="cy"></div>
 </template>
