@@ -29,20 +29,32 @@ let drawGraph = function() {
       {
          selector: 'node',
          style: {
+           'shape': 'rectangle',
+           'height': '300px',
+           'width': '500px',
            'content': 'data(displayName)',
            'text-opacity': 1,
            'text-valign': 'center',
-           'text-halign': 'right',
-           'background-color': '#00ccd6'
+           'background-color': '#efeff4',
+           'font-size': '3.5em',
+           'font-weight': '100',
+           'font-color': '#404040',
+           'font-family': 'Roboto',
+           'shadow-color': '#969696',
+           'shadow-offset-x': '0',
+           'shadow-offset-y': '2',
+           'shadow-blur': '5',
+           'shadow-opacity': '.8',
+           'cursor': 'pointer'
          }
        },
        {
          selector: 'edge',
          style: {
-           'width': 4,
+           'width': 20,
            'target-arrow-shape': 'triangle',
-           'line-color': '#a7f5f8',
-           'target-arrow-color': '#a7f5f8'
+           'line-color': '#404040',
+           'target-arrow-color': '#404040'
          }
        }
     ],
@@ -50,6 +62,9 @@ let drawGraph = function() {
       nodes: Modules.client.getHistoryNodes(),
       edges: Modules.client.getHistoryEdges()
     },
+  });
+  cy.nodes().forEach(function(node) {
+    console.log(node.position("x") + ", " + node.position("y"));
   });
 }
 

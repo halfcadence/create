@@ -16,14 +16,12 @@ let startHistoryTracker = function() {
         displayName = fields.title;
       else
         displayName = id;
-      console.log("adding node with display name: " + displayName);
       addUniqueNode(id,displayName);
       changeDisplayName(id, displayName); //make sure name is correct
       addChildren(id,fields);
     },
     changed: function(id, fields) {
       if (fields.title !== undefined) {
-          console.log("changing display name of " + id + " to " + fields.title);
           changeDisplayName(id, fields.title);
         }
     },
@@ -43,14 +41,12 @@ let startHistoryTracker = function() {
         displayName = fields.title;
       else
         displayName = id;
-      console.log("adding node with display name: " + displayName);
       addUniqueNode(id,displayName);
       changeDisplayName(id, displayName); //make sure name is correct
       addChildren(id,fields);
     },
     changed: function(id, fields) {
       if (fields.title !== undefined) {
-        console.log("changing display name of " + id + " to " + fields.title);
         changeDisplayName(id, fields.title);
       }
     },
@@ -123,8 +119,7 @@ let findNodeWithId = function(id) {
 
 //returns a node with the id specified
 let node = function(id, displayName) {
-  console.log("making a node with id " + id + " and displayName " + displayName);
-  return { data: { id: id, displayName : displayName } };
+  return { data: { id: id, displayName : displayName, classes : 'node' } };
 }
 
 //returns an edge with the id specified
