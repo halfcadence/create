@@ -16,12 +16,16 @@ let startHistoryTracker = function() {
         displayName = fields.title;
       else
         displayName = id;
+      console.log("adding node with display name: " + displayName);
       addUniqueNode(id,displayName);
+      changeDisplayName(id, displayName); //make sure name is correct
       addChildren(id,fields);
     },
     changed: function(id, fields) {
-      if (fields.title !== undefined)
-        changeDisplayName(id, fields.title);
+      if (fields.title !== undefined) {
+          console.log("changing display name of " + id + " to " + fields.title);
+          changeDisplayName(id, fields.title);
+        }
     },
     removed: function (id, fields) {
       removeOutgoingAndIncomingEdges(id); //remove all related edges
@@ -39,12 +43,16 @@ let startHistoryTracker = function() {
         displayName = fields.title;
       else
         displayName = id;
+      console.log("adding node with display name: " + displayName);
       addUniqueNode(id,displayName);
+      changeDisplayName(id, displayName); //make sure name is correct
       addChildren(id,fields);
     },
     changed: function(id, fields) {
-      if (fields.title !== undefined)
+      if (fields.title !== undefined) {
+        console.log("changing display name of " + id + " to " + fields.title);
         changeDisplayName(id, fields.title);
+      }
     },
     removed: function (id) {
       //don't mess with the edges, we will probably still need them
@@ -77,8 +85,9 @@ let addChildren = function(id,fields) {
 
 //adds a node if unique
 let addUniqueNode = function(id, displayName) {
-  if ( findNodeWithId(id) > -1) //if the node already exists
+  if (findNodeWithId(id) > -1) {//if the node already exists
     return;
+  }
   nodes.push(node(id, displayName)); //add the node to the array
 }
 
@@ -114,6 +123,7 @@ let findNodeWithId = function(id) {
 
 //returns a node with the id specified
 let node = function(id, displayName) {
+  console.log("making a node with id " + id + " and displayName " + displayName);
   return { data: { id: id, displayName : displayName } };
 }
 
