@@ -12,16 +12,11 @@ let showHistory = function() {
 }
 
 let drawGraph = function() {
-  console.log("drawing graph with nodes: ");
-  let historyNodes =  Modules.client.getHistoryNodes();
-  let node;
-  for(let i = 0; i < historyNodes.length; i++) {
-    console.log(historyNodes[i].data.id + ": " + historyNodes[i].data.displayName);
-  }
   cy = cytoscape({
     container: document.getElementById('cy'),
     boxSelectionEnabled: false,
     autounselectify: true,
+    maxZoom: 1,
     layout: {
       name: 'dagre'
     },
@@ -61,10 +56,18 @@ let drawGraph = function() {
     elements: {
       nodes: Modules.client.getHistoryNodes(),
       edges: Modules.client.getHistoryEdges()
-    },
+    }
   });
+  cy.center();
+}
+
+//function to draw actual notecards on top of cytoscape
+//non-functional
+let drawRealNoteCards = function() {
   cy.nodes().forEach(function(node) {
-    console.log(node.position("x") + ", " + node.position("y"));
+    console.log("drawing notecard with id " + node.data("id") + " at " + node.position("x") + ", " + node.position("y"));
+    let noteCard = Modules.client.drawNoteCard(node.data("id"));
+    $('#cy').append(noteCard.div);
   });
 }
 

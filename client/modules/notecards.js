@@ -190,6 +190,7 @@ let drawNoteCard = function(id, args){
       }
     })
   });
+  return noteCard;
 }
 
 //notecard object, without pep
@@ -316,7 +317,7 @@ let mergeNoteCards = function(cardIds) {
     throw "invalid number of cards to be merged";
   if (cardIds[0] === cardIds[1]) //if the same card was clicked twice
     return;
-    
+
   //find the cards in the database
   let cardA = Cards.findOne({_id: cardIds[0]});
   let cardB = Cards.findOne({_id: cardIds[1]});
