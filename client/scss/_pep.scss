@@ -40,7 +40,7 @@
   height: 50px;
   border-radius: 50%;
   overflow:hidden;
-
+  visibility: hidden;
   background-color: $card-background-color;
 }
 .titleText{
@@ -89,28 +89,30 @@
 .cost {
   position:absolute;
   box-sizing: border-box;
-  padding: 45px 0px 0px 10px;
+  padding: 5px 10px 0px 10px;
   font-size: 2em;
   font-weight: 100;
   width: 50px;
-  height: 80px;
+  height: 40px;
   color: none;
-  top:10px;
-  right: 74px;
+  top: 10px;
+  right: 12px;
+  text-align: right;
   overflow:hidden;
-  background: $card-background-color;
+  background: $pep-color;
 }
 .priority{
   position:absolute;
   box-sizing: border-box;
-  padding: 45px 0px 0px 10px;
+  padding: 5px 10px 0px 10px;
   font-size: 2em;
   font-weight: 100;
   width: 50px;
-  height: 80px;
+  height: 40px;
   color: none;
-  top:10px;
+  top: 55px;
   right: 12px;
+  text-align: right;
   overflow:hidden;
-  background: $card-background-color;
+  background: $pep-color;
 }

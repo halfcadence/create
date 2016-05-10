@@ -32,6 +32,8 @@ let startNotecardTracker = () => {
         $(document.getElementById(id)).children('.cost').val(fields.cost);
       if (fields.priority !== undefined)
         $(document.getElementById(id)).children('.priority').val(fields.priority);
+      if (fields.position !== undefined)
+        slideNotecard(id, fields.position);
       if (fields.groupId !== undefined)
         updateGroupIcons(fields.groupId);
       if (fields.zIndex !== undefined)
@@ -51,6 +53,20 @@ let startNotecardTracker = () => {
     }
   });
 };
+
+//slides a notecard to reflect changes on another client
+let slideNotecard = function(id, position) {
+  //find the card
+  let slidingCard = Modules.client.getNoteCardObjects()[id];
+  if (!slidingCard)
+    throw "Couldn't find a card to slide.";
+
+  //slide the card
+  if (position === "right")
+    slidingCard.slide("left");
+  else if (position === "left")
+    slidingCard.slide("right");
+}
 
 let updateGroupIcons = function(groupId){
    if (groupId === undefined) return;

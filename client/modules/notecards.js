@@ -4,6 +4,10 @@ let enabledTriangle = null
 let cardWidth = 500;
 let cardHeight = 300;
 
+//client side storage of notecards
+//mostly to be able to call functions like "slide" from the notecard id
+let notecards = {};
+
 //new button
 Template.application.events({ //events on the page body
   "click button.blue": function (event) { //click on new button
@@ -14,6 +18,7 @@ Template.application.events({ //events on the page body
   }
 });
 
+//makes a new notecard by adding it to the database
 let makeNewNoteCard = function(zIndex) {
   var id = Cards.insert({
         projectId: Modules.client.getProjectId(),
@@ -30,6 +35,7 @@ let makeNewNoteCard = function(zIndex) {
   });
 }
 
+//draws a notecard
 let drawNoteCard = function(id, args){
   let arguments = args || {};
   let noteCard = new Notecard();
@@ -190,6 +196,7 @@ let drawNoteCard = function(id, args){
       }
     })
   });
+  notecards[id] = noteCard;
   return noteCard;
 }
 
@@ -252,12 +259,22 @@ Notecard.prototype = {
     if (direction === "left") {
       $(this.implementation).css('left', 0);
       this.position = "right"; //right element showing
+
+      //hide left triangle so it doesn't obscure text
+      $(this.rightTriangle).css('visibility', 'visible');
+      $(this.leftTriangle).css('visibility', 'hidden');
+
       Cards.update(this.id, { //set position in database
         $set: {position : "right"}
       });
     } else if (direction === "right") {
       $(this.implementation).css('left', 500);
       this.position = "left"; //left element showing
+
+      //hide right triangle so it doesn't obscure text
+      $(this.rightTriangle).css('visibility', 'hidden');
+      $(this.leftTriangle).css('visibility', 'visible');
+
       Cards.update(this.id, { //set position in database
         $set: {position : "left"}
       });
@@ -421,3 +438,4 @@ let addToGroup = function(cardId, groupName) {
 Modules.client.drawNoteCard = drawNoteCard;
 Modules.client.splitNoteCard = splitNoteCard;
 Modules.client.mergeNoteCards = mergeNoteCards;
+Modules.client.getNoteCardObjects = function() {return notecards};
