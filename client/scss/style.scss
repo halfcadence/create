@@ -1,6 +1,21 @@
-@import 'variables';
-@import 'base';
-@import 'pep';
-@import 'ui';
-@import 'contextmenu';
-@import 'history';
+@import 'include-media';
+
+@include media("<desktop") {
+  $sf: .25;
+  @import 'variables';
+  @import 'base';
+  @import 'pep';
+  @import 'ui';
+  @import 'contextmenu';
+  @import 'history';
+}
+
+@include media(">=desktop") {
+  $sf: .5;
+  @import 'variables';
+  @import 'base';
+  @import 'pep';
+  @import 'ui';
+  @import 'contextmenu';
+  @import 'history';
+}
