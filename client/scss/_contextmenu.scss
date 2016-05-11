@@ -2,11 +2,11 @@
   display: none;
   position: absolute;
   z-index: 1000000;
-  padding: 12px 0;
-  width: 240px;
+  padding: $sf*12px 0;
+  width: $sf*240px;
   background-color: $pep-color;
   border: none;
-  box-shadow: 0px 2px 5px 2px rgba(150, 150, 150, 0.8);
+  box-shadow: 0px $sf*2px $sf*5px $sf*2px rgba(150, 150, 150, 0.8);
 }
 
 .context-menu--active {
@@ -22,7 +22,7 @@
 
 .context-menu__description {
   display: block;
-  padding: 4px 12px;
+  padding: $sf*4px $sf*12px;
   color: #000000;
   background-color: $pep-color;
   text-decoration: none;
@@ -30,7 +30,7 @@
 
 .context-menu__cancel {
   display: block;
-  padding: 4px 12px;
+  padding: $sf*4px $sf*12px;
   text-align: right;
   color: $button-red;
   background-color: $pep-color;
@@ -44,8 +44,8 @@
 
 .context-menu__item {
   display: block;
-  font-size: 1.5em;
-  margin-bottom: 4px;
+  font-size: $sf*1.5em;
+  margin-bottom: $sf*4px;
 }
 
 .context-menu__item:last-child {
@@ -54,7 +54,7 @@
 
 .context-menu__link {
   display: block;
-  padding: 4px 12px;
+  padding: $sf*4px $sf*12px;
   text-decoration: none;
   color: $button-blue;
   background-color: $pep-color;
