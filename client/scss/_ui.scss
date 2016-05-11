@@ -1,12 +1,12 @@
 .cursorCircle{
   background: none;
   border-style: solid;
-  border-width: 30px 30px 0 0;
+  border-width: $sf *30px $sf *30px 0 0;
   border-color: #FFEC64 transparent transparent transparent;
   height: 0; width: 0;
   position: absolute;
-  top: -100px;
-  left: -100px;
+  top: $sf *-100px;
+  left: $sf *-100px;
   z-index:1000000;
   pointer-events:none;
 }
@@ -14,30 +14,30 @@
 .create {
   button{
   background: transparent;
-  box-shadow: 0px 2px 5px 2px rgba(150, 150, 150, 0.8);
-  height: 150px;
-  width: 250px;
+  box-shadow: 0px $sf *2px $sf *5px $sf *2px rgba(150, 150, 150, 0.8);
+  height: $sf *150px;
+  width: $sf *250px;
   outline: none;
   position: fixed;
   z-index:100000;
-  top: 50px;
-  left: 45px;
+  top: $sf *50px;
+  left: $sf *45px;
   &.blue{
-  border: 2px solid $button-blue;
+  border: $sf *2px solid $button-blue;
   }
   &:hover{
     cursor: pointer;
-    border: 2px solid $button-pressed-color;}
+    border: $sf *2px solid $button-pressed-color;}
   &:active{
-    box-shadow: 0px 1px 4px 0px rgba(119, 119, 119, 0.8);
-    margin-top: 1px;
+    box-shadow: 0px $sf *1px $sf *4px 0px rgba(119, 119, 119, 0.8);
+    margin-top: $sf *1px;
     color: $button-pressed-color;
   }
   span{
     font-family: "Roboto", sans-serif;
     text-transform: lowercase;
-    font-weight: 100;
-    font-size: 4.2em;
+    font-weight: $sf *100;
+    font-size: $sf *4.2em;
     font-style: italic;
     color: $button-pressed-color;
     background: none;
@@ -55,11 +55,13 @@
     background: url(/images/trashcan.png) no-repeat;
     height: 168px;
     width: 160px;
+    transform-origin: bottom right;
+    transform: scale($sf);
     outline: none;
     position: fixed;
     z-index:1000000;
-    bottom: 50px;
-    right: 45px;
+    bottom: $sf *50px;
+    right: $sf *45px;
     border: none;
     &.filled{
       background: url(/images/trashcanfilled.png) no-repeat;
@@ -68,7 +70,7 @@
       cursor: pointer;
     }
     &:active{
-      margin-bottom: -1px;
+      margin-bottom: $sf *-1px;
     }
   }
 }
@@ -77,7 +79,8 @@
   button{
     background: url(/images/group.png) no-repeat;
     height: 157px;
-    width: 258px;
+    width:258px;
+    transform: scale($sf);
     outline: none;
     position: fixed;
     z-index:1000000;
@@ -89,41 +92,45 @@
       cursor: pointer;
     }
     &:active{
-      margin-bottom: -1px;
+      margin-bottom: $sf *-1px;
     }
   }
 }
 
 #leftCornerGroup{
-  bottom: 50px;
-  left: 45px;
+  bottom: $sf *50px;
+  left: $sf *45px;
+  transform-origin: bottom left;
 }
 #rightCornerGroup{
-  top: 50px;
-  right: 45px;
+  top: $sf *50px;
+  right: $sf *45px;
+  transform-origin: top right;
 }
 #topMiddleGroup{
   margin: 0 auto;
   left:0;
   right:0;
-  top:50px;
+  top:$sf *50px;
+  transform-origin: top;
 }
 #bottomMiddleGroup{
   margin: 0 auto;
   left:0;
   right:0;
-  bottom:50px;
+  bottom:$sf *50px;
+  transform-origin: bottom;
 }
 .veil {
   position: absolute;
-  top: 25px;
-  left: 25px;
-  bottom: 25px;
-  right: 25px;
+  top: $sf *25px;
+  left: $sf *25px;
+  bottom: $sf *25px;
+  right: $sf *25px;
   z-index: 10000000;
   //pointer-events:none;
   background: #000000;
-  box-shadow: 0px 10px 10px 5px rgba(50, 50, 50, 0.8);
+  box-shadow: 0px $sf *10px $sf *10px $sf *5px rgba(50, 50, 50, 0.8);
   opacity: .7;
   overflow: hidden;
   visibility: hidden;
@@ -134,28 +141,28 @@
     z-index:100000000;
     &.x{
       background: url(/images/x.png) no-repeat;
-      top:20px;
-      right: 20px;
-      height: 60px;
-      width: 60px;
+      top:$sf *20px;
+      right: $sf *20px;
+      height: $sf *60px;
+      width: $sf *60px;
     }
     &:active{
-      margin-top: 1px;
+      margin-top: $sf *1px;
     }
     &.removeall{
       background: url(/images/removeAllText.png) no-repeat;
       margin: 0 auto;
       left:0;
       right:0;
-      bottom:30px;
-      height: 32px;
-      width: 192px;
+      bottom:$sf *30px;
+      height: $sf *32px;
+      width: $sf *192px;
     }
     &:hover{
       cursor: pointer;
     }
     &:active{
-      margin-bottom: -1px;
+      margin-bottom: $sf *-1px;
     }
   }
 }

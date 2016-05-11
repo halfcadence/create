@@ -1,6 +1,6 @@
 @import 'include-media';
 
-@include media("<desktop") {
+@include media("<=phone") {
   $sf: .25;
   @import 'variables';
   @import 'base';
@@ -10,8 +10,18 @@
   @import 'history';
 }
 
-@include media(">=desktop") {
+@include media("<desktop") {
   $sf: .5;
+  @import 'variables';
+  @import 'base';
+  @import 'pep';
+  @import 'ui';
+  @import 'contextmenu';
+  @import 'history';
+}
+
+@include media(">=desktop") {
+  $sf: .75;
   @import 'variables';
   @import 'base';
   @import 'pep';
