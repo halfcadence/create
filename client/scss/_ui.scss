@@ -11,21 +11,39 @@
   pointer-events:none;
 }
 
+@keyframes wiggle {
+  0% {
+    top: $sf*50px;
+   }
+  25% {
+    top: $sf*45px;
+   }
+  75% {
+    top: $sf*55px;
+  }
+  100% {
+    top: $sf*50px;
+   }
+}
+
 .create {
   button{
-  background: transparent;
-  box-shadow: 0px $sf *2px $sf *5px $sf *2px rgba(150, 150, 150, 0.8);
-  height: $sf *150px;
-  width: $sf *250px;
-  outline: none;
-  position: fixed;
-  z-index:100000;
-  top: $sf *50px;
-  left: $sf *45px;
+    animation: wiggle .3s 3;
+    animation-timing-function: linear;
+    background: transparent;
+    box-shadow: 0px $sf *2px $sf *5px $sf *2px rgba(150, 150, 150, 0.8);
+    height: $sf *150px;
+    width: $sf *250px;
+    outline: none;
+    position: fixed;
+    z-index:100000;
+    top: $sf *50px;
+    left: $sf *45px;
   &.blue{
-  border: $sf *2px solid $button-blue;
+    border: $sf *2px solid $button-blue;
   }
   &:hover{
+    animation-iteration-count: 2;
     cursor: pointer;
     border: $sf *2px solid $button-pressed-color;}
   &:active{
@@ -149,6 +167,7 @@
     border:none;
     position: absolute;
     z-index:100000000;
+    transition: transform .1s;
     &.x{
       background: url(/images/x.png) no-repeat;
       transform: scale($sf);
@@ -174,6 +193,7 @@
     }
     &:hover{
       cursor: pointer;
+      transform: scale($sf*1.1);
     }
     &:active{
       margin-bottom: $sf *-1px;

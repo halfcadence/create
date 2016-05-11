@@ -148,7 +148,6 @@ let drawNoteCard = function(id, args){
         //addToGroup(noteCard.id, "trash");
         //$(".del button").addClass('hover');
         $('#trash').addClass('bloat');
-        console.log("hovering over trash");
       }
       else if (bottom <=scaleFactor*50 && position.left <= scaleFactor*50) { //left corner group
         $('#leftCornerGroup').addClass('bloat');
@@ -185,7 +184,7 @@ let drawNoteCard = function(id, args){
       $('#bottomMiddleGroup').removeClass('bloat');
       $('#topMiddleGroup').removeClass('bloat');
       $('#trash').removeClass('bloat');
-      
+
       //second half of rest bug workaround
       if (noteCard.grouped) {
         noteCard.grouped = false; //reset grouped so that resting works in the future

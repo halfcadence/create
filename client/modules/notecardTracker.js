@@ -95,7 +95,12 @@ let updateEmptyGroupIcons = function() {
 }
 
 let updateFilledGroupIcons = function(groupId) {
-  $('#' + groupId).addClass('filled');
+  $('#' + groupId).addClass('filled')
+  if (groupId === 'bottomMiddleGroup' || groupId === 'topMiddleGroup')
+    Modules.client.shake($('#' + groupId));
+  else
+    $('#' + groupId).effect("shake", {times: 2, distance: 10});
+
 }
 
 let removeThing = function(thing){

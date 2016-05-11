@@ -46,7 +46,7 @@ let initializeVariables = function() {
   menuState = 0;
   mergeMenuOn = false;
 
-  menu = document.querySelector("#context-menu");
+  menu = document.querySelector("#pep-context-menu");
   menuItems = menu.querySelectorAll(".context-menu__item");
 }
 
@@ -202,7 +202,6 @@ let menuItemListener = function (link, event) {
       toggleMenuOff();
       break;
     default:
-      throw "Invalid action from context menu.";
       toggleMenuOff();
   }
 }
@@ -242,4 +241,4 @@ let turnMergeMenuOn = function() {
   mergeMenuOn = true;
 }
 
-Modules.client.startContextMenu = startContextMenu;
+Modules.client.startPepContextMenu = startContextMenu;

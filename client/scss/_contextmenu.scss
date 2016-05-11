@@ -42,6 +42,20 @@
   background-color: $button-red;
 }
 
+.context-menu__empty {
+  display: block;
+  padding: $sf*4px $sf*12px;
+  text-align: left;
+  color: $button-red;
+  background-color: $pep-color;
+  text-decoration: none;
+}
+
+.context-menu__empty:hover {
+  color: $pep-color;
+  background-color: $button-red;
+}
+
 .context-menu__item {
   display: block;
   font-size: $sf*1.5em;
