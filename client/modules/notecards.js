@@ -12,7 +12,6 @@ let cardHeight = defaultCardHeight;
 //sets card size when the window size changes
 let setCardDimensions = function() {
   scaleFactor = Session.get("scaleFactor");
-  console.log("scaleFactor: " + scaleFactor);
   cardWidth = scaleFactor*500;
   cardHeight = scaleFactor*300;
 }

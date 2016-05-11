@@ -1,6 +1,6 @@
 let currentGroupId =  ""; //hack so that removeAllFromGroup knows which groupId to target
-
 let groupNames = ["leftCornerGroup", "topMiddleGroup", "rightCornerGroup", "bottomMiddleGroup", "trash"];
+let redrawTracker; //function to track when veil should be redrawn
 
 Template.application.events({ //events on the page body
   "click button.group#leftCornerGroup": function (event) {
@@ -55,11 +55,19 @@ let removeAllFromGroup = function(groupId, zIndex) {
 
 let showGroupedCards = function(groupId) {
   currentGroupId = groupId;
+  showVeil(groupId);
+  //draw the cards whenever scale factor changes
+  redrawTracker = Tracker.autorun(function() {
+    let scaleFactor = Session.get("scaleFactor");
+    drawGroupedCards(groupId);
+  });
+}
 
+//draws cards without changing their database positions
+let drawGroupedCards = function(groupId) {
   //TODO: increase efficiency of query by adding {locationX: 1, locationY: 1}
   //TODO: sort with find.sort and display in order
   let groupedCards = Cards.find({groupId: groupId});
-  showVeil(groupId);
   drawPositions = makePlacementArray();
   let drawPositionIndex = 0;
   groupedCards.forEach(function(card) {
@@ -93,6 +101,9 @@ let hideVeil = function (groupId) {
 }
 
 let hideGroupedCards = function(groupId) {
+  console.log(redrawTracker);
+  redrawTracker.stop(); //stop the scaleFactor tracker
+  console.log("after: " + redrawTracker);
   let trashCards = Cards.find({groupId: groupId});
   trashCards.forEach(function(card) {
     //move each card in the group to its dB position
@@ -133,9 +144,11 @@ let ungroupPepOnClick = function() {
 //TODO: dynamically allocate this array
 //makes the array with positions cards will be drawn from the group
 let makePlacementArray = function() {
-  let cornerDistance = 50;
-  let xStep = 510; //distance between each card <->
-  let yStep = 310; //distance between each card ^-v
+  let scaleFactor = Session.get("scaleFactor");
+
+  let cornerDistance = scaleFactor*50;
+  let xStep = scaleFactor*510; //distance between each card <->
+  let yStep = scaleFactor*310; //distance between each card ^-v
   let drawPositions = [
     {x:cornerDistance, y:cornerDistance},
     {x:cornerDistance + xStep, y:cornerDistance},
