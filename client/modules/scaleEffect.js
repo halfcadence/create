@@ -2,11 +2,15 @@
 //to or from the specified location
 let scaleEffectIn = function(div, startX, startY, endX, endY) {
   scaleFactor = Session.get("scaleFactor");
+
+  //starting css
   $(div).height('0px');
   $(div).width('0px');
   $(div).css('top', startX);
   $(div).css('left', startY);
   $(div).width('0px');
+
+  //animation
   $(div).animate({
     height: scaleFactor*300 + 'px',
     width: scaleFactor*500 + 'px',

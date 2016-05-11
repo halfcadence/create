@@ -138,11 +138,54 @@ let drawNoteCard = function(id, args){
                locationY: $(noteCard.div).position().top}
       });
       Modules.client.moveCaret(-100,-100); //kill the caret... eventually we need to figure out which text box it's in and move, etc...
+
+      //bloat the group which is hovered over
+      let link = $(noteCard.div);
+      let position = link.position(); //cache the position
+      let right = $(window).width() - position.left - link.width();
+      let bottom = $(window).height() - position.top - link.height();
+      if (bottom <=scaleFactor*50 && right <= scaleFactor*50) {
+        //addToGroup(noteCard.id, "trash");
+        //$(".del button").addClass('hover');
+        $('#trash').addClass('bloat');
+        console.log("hovering over trash");
+      }
+      else if (bottom <=scaleFactor*50 && position.left <= scaleFactor*50) { //left corner group
+        $('#leftCornerGroup').addClass('bloat');
+      }
+      else if (position.top <=scaleFactor*50 && right <= scaleFactor*50) { //right corner group
+        $('#rightCornerGroup').addClass('bloat');
+      }
+      else if (bottom <=scaleFactor*50 //we really need a real collision engine T.T
+        && position.left >= $(window).width()/2 - scaleFactor*300 //left corner is past middle - 300px
+        && position.left + scaleFactor*500 <= $(window).width()/2 + scaleFactor*300 ) { //right corner is before middle + 300px
+        $('#bottomMiddleGroup').addClass('bloat');
+      }
+      else if (position.top <=scaleFactor*50 //we really need a real collision engine T.T
+        && position.left >= $(window).width()/2 - scaleFactor*300 //left corner is past middle - 300px
+        && position.left + scaleFactor*500 <= $(window).width()/2 + scaleFactor*300 ) { //right corner is before middle + 300px
+        $('#topMiddleGroup').addClass('bloat');
+      }
+      else {
+        //remove bloat from groups
+        $('#leftCornerGroup').removeClass('bloat');
+        $('#rightCornerGroup').removeClass('bloat');
+        $('#bottomMiddleGroup').removeClass('bloat');
+        $('#topMiddleGroup').removeClass('bloat');
+        $('#trash').removeClass('bloat');
+      }
     },
     rest: (function(ev) {
       if (!noteCard)
         return;
 
+      //shrink all bloated groups
+      $('#leftCornerGroup').removeClass('bloat');
+      $('#rightCornerGroup').removeClass('bloat');
+      $('#bottomMiddleGroup').removeClass('bloat');
+      $('#topMiddleGroup').removeClass('bloat');
+      $('#trash').removeClass('bloat');
+      
       //second half of rest bug workaround
       if (noteCard.grouped) {
         noteCard.grouped = false; //reset grouped so that resting works in the future

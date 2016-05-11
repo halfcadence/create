@@ -63,8 +63,12 @@
     bottom: $sf *50px;
     right: $sf *45px;
     border: none;
+    transition: transform .1s;
     &.filled{
       background: url(/images/trashcanfilled.png) no-repeat;
+    }
+    &.bloat{
+      transform: scale($sf*1.1);
     }
     &:hover{
       cursor: pointer;
@@ -86,11 +90,16 @@
     position: fixed;
     z-index:1000000;
     border: none;
+    transition: transform .1s;
     &.filled{
       background: url(/images/groupfilled.png) no-repeat;
     }
+    &.bloat{
+      transform: scale($sf*1.1);
+    }
     &:hover{
       cursor: pointer;
+      transform: scale($sf*1.1);
     }
     &:active{
       margin-bottom: $sf *-1px;
