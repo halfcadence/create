@@ -17,8 +17,11 @@ function resize() {
     else if (clientWidth < 1024) { //medium
       Session.set('scaleFactor', .5);
     }
-    else {
+    else if (clientWidth < 1440){
       Session.set('scaleFactor', .75); //wide
+    }
+    else {
+      Session.set('scaleFactor', 1);
     }
 };
 

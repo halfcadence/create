@@ -9,7 +9,11 @@
   $sf: .5;
   @import 'everything';
 }
-@include media(">=desktop") { //huge screen
+@include media(">=desktop", "<1440px") { //huge screen
   $sf: .75;
+  @import 'everything';
+}
+@include media(">=1440px") { //huge screen
+  $sf: 1;
   @import 'everything';
 }

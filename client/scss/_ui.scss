@@ -141,22 +141,26 @@
     z-index:100000000;
     &.x{
       background: url(/images/x.png) no-repeat;
+      transform: scale($sf);
+      transform-origin: top right;
       top:$sf *20px;
       right: $sf *20px;
-      height: $sf *60px;
-      width: $sf *60px;
+      height: 60px;
+      width: 60px;
     }
     &:active{
       margin-top: $sf *1px;
     }
     &.removeall{
       background: url(/images/removeAllText.png) no-repeat;
+      transform: scale($sf);
+      transform-origin: bottom;
       margin: 0 auto;
       left:0;
       right:0;
       bottom:$sf *30px;
-      height: $sf *32px;
-      width: $sf *192px;
+      height: 32px;
+      width: 192px;
     }
     &:hover{
       cursor: pointer;
