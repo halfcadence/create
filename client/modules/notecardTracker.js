@@ -23,11 +23,11 @@ let startNotecardTracker = () => {
       let startX = Session.get("scaleFactor")*(45 + 250/2);
       let startY = Session.get("scaleFactor")*(50 + 150/2);
 
-      Modules.client.scaleEffectIn(document.getElementById(id), startX,startY, arguments.locationX, arguments.locationY);
+      Modules.client.scaleEffectIn(document.getElementById(id), startX,startY, Session.get('clientWidth')*arguments.locationX, Session.get('clientHeight')*arguments.locationY);
     },
     changed: function(id, fields) {
       if (fields.locationX  !== undefined || fields.locationY !== undefined)
-        Modules.client.moveThing(document.getElementById(id),fields.locationX, fields.locationY);
+        Modules.client.moveThing(document.getElementById(id),fields.locationX*Session.get('clientWidth'), fields.locationY*Session.get('clientHeight'));
       if (fields.title !== undefined)
         $(document.getElementById(id)).children('.titleText').val(fields.title);
       if (fields.body !== undefined)

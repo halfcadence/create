@@ -45,8 +45,8 @@ let removeAllFromGroup = function(groupId, zIndex) {
   groupedCards.forEach(function(card) {
     Cards.update(card._id, { //set position for all elements with groupId
       $set: {groupId: "",
-        locationX: drawPositions[drawPositionIndex].x,
-        locationY: drawPositions[drawPositionIndex].y,
+        locationX: drawPositions[drawPositionIndex].x/Session.get('clientWidth'),
+        locationY: drawPositions[drawPositionIndex].y/Session.get('clientHeight'),
         zIndex: zIndex}
     });
     drawPositionIndex = (drawPositionIndex + 1 ) % drawPositions.length;
@@ -123,8 +123,8 @@ let ungroupPepOnClick = function() {
   Cards.update(that.id, { //immediately set database position and remove from group
     $set: {
       groupId : "",
-      locationX: $(that).position().left,
-      locationY: $(that).position().top
+      locationX: $(that).position().left/Session.get('clientWidth'),
+      locationY: $(that).position().top/Session.get('clientHeight')
     }
   });
 

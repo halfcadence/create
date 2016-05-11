@@ -41,8 +41,8 @@ let makeNewNoteCard = function(zIndex) {
         title: "",
         body: "",
         body2: "",
-        locationX:  195,
-        locationY: 25,
+        locationX:  scaleFactor*195/Session.get('clientWidth'),
+        locationY: scaleFactor*25/Session.get('clientHeight'),
         cost: "",
         priority: "",
         position: "left",
@@ -114,28 +114,30 @@ let drawNoteCard = function(id, args){
     setCurrentEnabled(noteCard.description);
     noteCard.focusDescriptionAndEnableLeftTriangle();
   });
+  console.log("drawing pep at " + arguments.locationX*Session.get('clientWidth') + ", " +  arguments.locationY*Session.get('clientHeight'))
+
   $(noteCard.div).pep({
     cssEaseDuration: 750, //amount of time betwen stop and rest
     constrainTo: 'window',
     elementsWithInteraction: 'textarea',
     //detects mouseUp
     startPos: {
-      left: arguments.locationX || scaleFactor*195,
-      top: arguments.locationY || scaleFactor*25
+      left: arguments.locationX*Session.get('clientWidth') || scaleFactor*195,
+      top: arguments.locationY*Session.get('clientHeight') || scaleFactor*25
     },
     //this is a bit janky because it won't change if the window is resized
     startThreshold: [scaleFactor*25, scaleFactor*25],
     initiate: function() {
       noteCard.goToTop();
       Cards.update(id, { //set position in database...TODO: optimize this a bit with an interval
-        $set: {locationX: $(noteCard.div).position().left,
-               locationY: $(noteCard.div).position().top}
+        $set: {locationX: $(noteCard.div).position().left/Session.get('clientWidth'),
+               locationY: $(noteCard.div).position().top/Session.get('clientHeight')}
       });
     },
     drag: function(ev, obj){
       Cards.update(id, { //set position in database...TODO: optimize this a bit with an interval
-        $set: {locationX: $(noteCard.div).position().left,
-               locationY: $(noteCard.div).position().top}
+        $set: {locationX: $(noteCard.div).position().left/Session.get('clientWidth'),
+               locationY: $(noteCard.div).position().top/Session.get('clientHeight')}
       });
       Modules.client.moveCaret(-100,-100); //kill the caret... eventually we need to figure out which text box it's in and move, etc...
 
@@ -191,8 +193,8 @@ let drawNoteCard = function(id, args){
         return; // prevent position from being set while trying to fly to x=1000 for group
       }
       Cards.update(id, { //set position in database
-        $set: {locationX: $(noteCard.div).position().left,
-              locationY: $(noteCard.div).position().top,
+        $set: {locationX: $(noteCard.div).position().left/Session.get('clientWidth'),
+              locationY: $(noteCard.div).position().top/Session.get('clientHeight'),
               groupId: ""} //if we rest and haven't been put into a group, take us out of group
       });
     }),
