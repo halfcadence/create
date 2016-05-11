@@ -101,9 +101,7 @@ let hideVeil = function () {
 }
 
 let hideGroupedCards = function() {
-  console.log(redrawTracker);
   redrawTracker.stop(); //stop the scaleFactor tracker
-  console.log("after: " + redrawTracker);
   let trashCards = Cards.find({groupId: currentGroupId});
   trashCards.forEach(function(card) {
     //move each card in the group to its dB position

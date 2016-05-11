@@ -68,6 +68,7 @@
     }
     &:hover{
       cursor: pointer;
+      transform: scale($sf*1.1);
     }
     &:active{
       margin-bottom: $sf *-1px;

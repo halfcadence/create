@@ -13,6 +13,9 @@ let scaleEffectIn = function(div, startX, startY, endX, endY) {
     left: endX + 'px',
     top: endY + 'px',
   }, 200, function(){
+    //reset style so that media query will still resize div
+    $(div).css('height', '');
+    $(div).css('width', '');
   });
 }
 
