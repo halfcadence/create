@@ -18,6 +18,12 @@ let startNotecardTracker = () => {
       updateGroupIcons(fields.groupId);
       //draw the card
       Modules.client.drawNoteCard(id, arguments);
+
+      //scale in from the center of new button
+      let startX = Session.get("scaleFactor")*(45 + 250/2);
+      let startY = Session.get("scaleFactor")*(50 + 150/2);
+
+      Modules.client.scaleEffectIn(document.getElementById(id), startX,startY, arguments.locationX, arguments.locationY);
     },
     changed: function(id, fields) {
       if (fields.locationX  !== undefined || fields.locationY !== undefined)

@@ -32,8 +32,8 @@ let drawCaret = function(args) {
   caret.style.position = 'absolute';
   caret.style.background = arguments.color || 'black';
   caret.style.zIndex = 5000;
-  caret.style.height = '50px';
-  caret.style.width = '3px';
+  caret.style.height = Session.get("scaleFactor")*50 + 'px';
+  caret.style.width = Session.get("scaleFactor")*3 + 'px';
   caret.style.top = arguments.top + 'px'|| '-1000px';
   caret.style.left = arguments.left + 'px' || '-1000px';
   return caret;
