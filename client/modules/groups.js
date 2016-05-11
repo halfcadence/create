@@ -55,19 +55,19 @@ let removeAllFromGroup = function(groupId, zIndex) {
 
 let showGroupedCards = function(groupId) {
   currentGroupId = groupId;
-  showVeil(groupId);
+  showVeil(currentGroupId);
   //draw the cards whenever scale factor changes
   redrawTracker = Tracker.autorun(function() {
     let scaleFactor = Session.get("scaleFactor");
-    drawGroupedCards(groupId);
+    drawGroupedCards(currentGroupId);
   });
 }
 
 //draws cards without changing their database positions
-let drawGroupedCards = function(groupId) {
+let drawGroupedCards = function() {
   //TODO: increase efficiency of query by adding {locationX: 1, locationY: 1}
   //TODO: sort with find.sort and display in order
-  let groupedCards = Cards.find({groupId: groupId});
+  let groupedCards = Cards.find({groupId: currentGroupId});
   drawPositions = makePlacementArray();
   let drawPositionIndex = 0;
   groupedCards.forEach(function(card) {
@@ -79,15 +79,15 @@ let drawGroupedCards = function(groupId) {
 
 //shows the veil
 //it removes itself when clicked upon
-let showVeil = function (groupId) {
+let showVeil = function () {
   let veil = $(".veil");
   let x = $(".x");
   veil.css('visibility', "visible");
-  $(x).on( "click.veil", function() {hideVeil(groupId)});
+  $(x).on( "click.veil", function() {hideVeil(currentGroupId)});
   $(".pep").on( "mousedown.veil", ungroupPepOnClick);
 }
 
-let hideVeil = function (groupId) {
+let hideVeil = function () {
   //hide the veil
   let veil = $(".veil");
   veil.css('visibility', "hidden");
@@ -97,14 +97,14 @@ let hideVeil = function (groupId) {
   $(".pep").off( ".veil");
 
   //hide the cards with the veil
-  hideGroupedCards(groupId);
+  hideGroupedCards(currentGroupId);
 }
 
-let hideGroupedCards = function(groupId) {
+let hideGroupedCards = function() {
   console.log(redrawTracker);
   redrawTracker.stop(); //stop the scaleFactor tracker
   console.log("after: " + redrawTracker);
-  let trashCards = Cards.find({groupId: groupId});
+  let trashCards = Cards.find({groupId: currentGroupId});
   trashCards.forEach(function(card) {
     //move each card in the group to its dB position
     //this will avoid the element taken out of the group
