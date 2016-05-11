@@ -1,31 +1,15 @@
+//responsive style sheet
 @import 'include-media';
 
-@include media("<=phone") {
-  $sf: .25;
-  @import 'variables';
-  @import 'base';
-  @import 'pep';
-  @import 'ui';
-  @import 'contextmenu';
-  @import 'history';
+@include media("<=phone") { //tiny screen
+  $sf: .35;
+  @import 'everything';
 }
-
-@include media("<desktop") {
+@include media(">phone","<desktop") { //medium screen
   $sf: .5;
-  @import 'variables';
-  @import 'base';
-  @import 'pep';
-  @import 'ui';
-  @import 'contextmenu';
-  @import 'history';
+  @import 'everything';
 }
-
-@include media(">=desktop") {
+@include media(">=desktop") { //huge screen
   $sf: .75;
-  @import 'variables';
-  @import 'base';
-  @import 'pep';
-  @import 'ui';
-  @import 'contextmenu';
-  @import 'history';
+  @import 'everything';
 }

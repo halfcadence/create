@@ -1,8 +1,25 @@
 let currentFocus = null //the textarea focused on
 let currentEnabled = null
 let enabledTriangle = null
-let cardWidth = 500;
-let cardHeight = 300;
+
+let defaultCardWidth = 500;
+let defaultCardHeight = 300;
+let defaultScaleFactor = .75;
+let scaleFactor = defaultScaleFactor;
+let cardWidth = defaultCardWidth;
+let cardHeight = defaultCardHeight;
+
+//sets card size when the window size changes
+let setCardDimensions = function() {
+  scaleFactor = Session.get("scaleFactor");
+  console.log("scaleFactor: " + scaleFactor);
+  cardWidth = scaleFactor*500;
+  cardHeight = scaleFactor*300;
+}
+
+let initializeCardSizes = function() {
+  Tracker.autorun(function() {setCardDimensions()});
+}
 
 //client side storage of notecards
 //mostly to be able to call functions like "slide" from the notecard id
@@ -104,10 +121,11 @@ let drawNoteCard = function(id, args){
     elementsWithInteraction: 'textarea',
     //detects mouseUp
     startPos: {
-      left: arguments.locationX || 195,
-      top: arguments.locationY || 25
+      left: arguments.locationX || scaleFactor*195,
+      top: arguments.locationY || scaleFactor*25
     },
-    startThreshold: [25, 25],
+    //this is a bit janky because it won't change if the window is resized
+    startThreshold: [scaleFactor*25, scaleFactor*25],
     initiate: function() {
       noteCard.goToTop();
       Cards.update(id, { //set position in database...TODO: optimize this a bit with an interval
@@ -141,17 +159,17 @@ let drawNoteCard = function(id, args){
       //if mouseup when drag has not started
       if (!this.started) {
         point = FindLocationOnObject(ev);
-        if (point.y <= 100) { //clicked title
+        if (point.y <= scaleFactor*100) { //clicked title
           setCurrentEnabled(noteCard.input);
           focusOn(noteCard.input);
         }
         //leftTriangle clicked when body is not focused
-        else if (point.y >= 200 && point.x >= 400) {
+        else if (point.y >= scaleFactor*200 && point.x >= scaleFactor*400) {
           //slide left
           noteCard.slide("left");
         }
         //rightTriangle clicked when body is not focused
-        else if (point.y >= 200 && point.x <= 100) {
+        else if (point.y >= scaleFactor*200 && point.x <= scaleFactor*100) {
           noteCard.slide("right");
         } else { //click in body which is disabled
           if (noteCard.position === "left") { //client view
@@ -168,29 +186,29 @@ let drawNoteCard = function(id, args){
       let position = link.position(); //cache the position
       let right = $(window).width() - position.left - link.width();
       let bottom = $(window).height() - position.top - link.height();
-      if (bottom <=50 && right <= 50) {
+      if (bottom <=scaleFactor*50 && right <= scaleFactor*50) {
         // delete the card
         // Cards.remove({_id : noteCard.id});
         addToGroup(noteCard.id, "trash");
         noteCard.grouped = true; //workaround for rest bug
       }
-      else if (bottom <=50 && position.left <= 50) { //left corner group
+      else if (bottom <=scaleFactor*50 && position.left <= scaleFactor*50) { //left corner group
         addToGroup(noteCard.id, "leftCornerGroup");
         noteCard.grouped = true;
       }
-      else if (position.top <=50 && right <= 50) { //right corner group
+      else if (position.top <=scaleFactor*50 && right <= scaleFactor*50) { //right corner group
         addToGroup(noteCard.id, "rightCornerGroup");
         noteCard.grouped = true;
       }
-      else if (bottom <=50 //we really need a real collision engine T.T
-        && position.left >= $(window).width()/2 - 300 //left corner is past middle - 300px
-        && position.left + 500 <= $(window).width()/2 + 300 ) { //right corner is before middle + 300px
+      else if (bottom <=scaleFactor*50 //we really need a real collision engine T.T
+        && position.left >= $(window).width()/2 - scaleFactor*300 //left corner is past middle - 300px
+        && position.left + scaleFactor*500 <= $(window).width()/2 + scaleFactor*300 ) { //right corner is before middle + 300px
         addToGroup(noteCard.id, "bottomMiddleGroup");
         noteCard.grouped = true;
       }
-      else if (position.top <=50 //we really need a real collision engine T.T
-        && position.left >= $(window).width()/2 - 300 //left corner is past middle - 300px
-        && position.left + 500 <= $(window).width()/2 + 300 ) { //right corner is before middle + 300px
+      else if (position.top <=scaleFactor*50 //we really need a real collision engine T.T
+        && position.left >= $(window).width()/2 - scaleFactor*300 //left corner is past middle - 300px
+        && position.left + scaleFactor*500 <= $(window).width()/2 + scaleFactor*300 ) { //right corner is before middle + 300px
         addToGroup(noteCard.id, "topMiddleGroup");
         noteCard.grouped = true;
       }
@@ -268,7 +286,7 @@ Notecard.prototype = {
         $set: {position : "right"}
       });
     } else if (direction === "right") {
-      $(this.implementation).css('left', 500);
+      $(this.implementation).css('left', scaleFactor*500);
       this.position = "left"; //left element showing
 
       //hide right triangle so it doesn't obscure text
@@ -316,10 +334,10 @@ let splitNoteCard = function(cardId) {
   delete card._id; //remove id from card
   let centerPosition = card.locationX + cardWidth/2; //the position between the two new cards
   //insert a card one card width left of center
-  card.locationX = centerPosition - cardWidth - 5;
+  card.locationX = centerPosition - cardWidth - scaleFactor*5;
   let leftChildId = Cards.insert(card);
   //put the second card at center
-  card.locationX = centerPosition + 5;
+  card.locationX = centerPosition + scaleFactor*5;
   let rightChildId = Cards.insert(card);
 
   //add the card to ghostcards to be tracked
@@ -435,6 +453,7 @@ let addToGroup = function(cardId, groupName) {
   });
 }
 
+Modules.client.initializeCardSizes = initializeCardSizes;
 Modules.client.drawNoteCard = drawNoteCard;
 Modules.client.splitNoteCard = splitNoteCard;
 Modules.client.mergeNoteCards = mergeNoteCards;

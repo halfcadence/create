@@ -10,7 +10,8 @@ Router.route('/', {
 Router.route('/:_id', {
   action: function () {
     this.render('application'); //render application template
-
+    Modules.client.startScaleFactor();
+    Modules.client.initializeCardSizes();
     //find out which pretty color the gods have given us
     Meteor.call("getPrettyColor", function (error,result) {
       userColor = result;

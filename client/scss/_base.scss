@@ -18,16 +18,11 @@ body {
 }
 
 textarea {
-  //color : transparent;
-  //text-shadow : 0 0 0 #000;
   display:block;
   border: 0;
   outline: 0;
   overflow: auto;
   resize: none;
-  /*&:focus{
-    border: solid 2px $button-blue;
-  }*/
 }
 input::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder{
