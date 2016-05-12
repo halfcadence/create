@@ -3,6 +3,7 @@
   top: $sf *25px;
   left: $sf *25px;
   background: $card-background-color;
+  transition: all .1s;
   height: $sf *300px;
   width: $sf *500px;
   box-shadow: 0px $sf *2px $sf *5px $sf *2px rgba(150, 150, 150, 0.8);

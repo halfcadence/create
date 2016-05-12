@@ -33,7 +33,7 @@
     background: transparent;
     transform-origin: top left;
     box-shadow: 0px $sf *2px $sf *5px $sf *2px rgba(150, 150, 150, 0.8);
-    transition: transform .1s;
+    transition: all .1s;
     transform: scale($sf);
     height: 150px;
     width: 250px;
@@ -84,7 +84,7 @@
     bottom: $sf *50px;
     right: $sf *45px;
     border: none;
-    transition: transform .1s;
+    transition: all .1s;
     &.filled{
       background: url(/images/trashcanfilled.png) no-repeat;
     }
@@ -111,7 +111,7 @@
     position: fixed;
     z-index:1000000;
     border: none;
-    transition: transform .1s;
+    transition: all .1s;
     &.filled{
       background: url(/images/groupfilled.png) no-repeat;
     }
@@ -170,7 +170,7 @@
     border:none;
     position: absolute;
     z-index:100000000;
-    transition: transform .1s;
+    transition: all .1s;
     &.x{
       background: url(/images/x.png) no-repeat;
       transform: scale($sf);
