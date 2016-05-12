@@ -107,7 +107,7 @@ let hideGroupedCards = function() {
     //move each card in the group to its dB position
     //this will avoid the element taken out of the group
     //even if it hasn't set its group name to "" yet
-    Modules.client.moveThing(document.getElementById(card._id), card.locationX, card.locationY);
+    Modules.client.moveThing(document.getElementById(card._id), card.locationX*Session.get('clientWidth'), card.locationY*Session.get('clientHeight'));
   });
   currentGroupId = "";
 }

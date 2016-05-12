@@ -375,12 +375,15 @@ let splitNoteCard = function(cardId) {
   //add the two new cards
   card.parents = [card._id];
   delete card._id; //remove id from card
-  let centerPosition = card.locationX + cardWidth/2; //the position between the two new cards
+
+  //the position between the two new cards in pixeks, accounting for the width of the viewport and scaleFactor of the cards
+  let centerPosition = card.locationX*Session.get('clientWidth') + scaleFactor*cardWidth/2;
   //insert a card one card width left of center
-  card.locationX = centerPosition - cardWidth - scaleFactor*5;
+  //math takes the center position, moves to the left one cards width, and divides by viewport width
+  card.locationX = (centerPosition - cardWidth - scaleFactor*5) / Session.get('clientWidth');
   let leftChildId = Cards.insert(card);
   //put the second card at center
-  card.locationX = centerPosition + scaleFactor*5;
+  card.locationX = (centerPosition + scaleFactor*5) / Session.get('clientWidth');
   let rightChildId = Cards.insert(card);
 
   //add the card to ghostcards to be tracked
@@ -490,7 +493,7 @@ let FindLocationOnObject = function(ev) {
 let addToGroup = function(cardId, groupName) {
   Cards.update(cardId, { //set position in database
     $set: {groupId : groupName,
-      locationX: 100000,
+      locationX: 10,
       locationY: 0
     }
   });

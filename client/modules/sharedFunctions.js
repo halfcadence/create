@@ -4,6 +4,7 @@ let moveThing = function(thing,x,y){
    position.left = x;
    position.top = y;
    $(thing).offset(position);
+   console.log("moving thing to " + x + ", " + y);
 };
 
 

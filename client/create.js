@@ -13,10 +13,12 @@ Router.route('/:_id', {
     Modules.client.startScaleFactor();
     Modules.client.initializeCardSizes();
     //find out which pretty color the gods have given us
-    Meteor.call("getPrettyColor", function (error,result) {
-      userColor = result;
-    });
-
+    if (userColor === 'black') {
+      Meteor.call("getPrettyColor", function (error,result) {
+        userColor = result;
+        console.log("pretty color: " + userColor);
+      });
+    }
     projectId = this.params._id;
     var filter =  {"projectId": projectId};
     Meteor.subscribe('Carets', filter, function(){
