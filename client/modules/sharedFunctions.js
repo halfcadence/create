@@ -3,7 +3,10 @@ let moveThing = function(thing,x,y){
    let position = {};
    position.left = x;
    position.top = y;
-   $(thing).stop().offset(position);
+   //we have $(thing).stop().offset to prevent buildup
+   //but it had the side effect of canceling genie effect animations and stuff
+   //leaving cards at size 0
+   $(thing).offset(position);
    console.log("moving thing to " + x + ", " + y);
 };
 

@@ -10,7 +10,7 @@ let startScaleFactor = function() {
 let resize = function() {
     Session.set('clientWidth',document.documentElement.clientWidth); //viewport width
     Session.set('clientHeight',document.documentElement.clientHeight); //viewport width
-    moveNoteCardsResponsively();
+    Modules.client.moveNoteCardsResponsively();
     let clientWidth = document.documentElement.clientWidth;
     if (clientWidth <= 440) { //tiny
       Session.set('scaleFactor', .35);
@@ -26,11 +26,5 @@ let resize = function() {
     }
 };
 
-let moveNoteCardsResponsively = function() {
-  let ungroupedCards = Cards.find({groupId: ''}); //all ungrouped cards
-  ungroupedCards.forEach(function(card) {
-    Modules.client.moveThing(document.getElementById(card._id),card.locationX*Session.get('clientWidth'), card.locationY*Session.get('clientHeight'));
-  });
-}
 Modules.client.getScaleFactor = function() { return scaleFactor};
 Modules.client.startScaleFactor = startScaleFactor;

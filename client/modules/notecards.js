@@ -499,6 +499,14 @@ let addToGroup = function(cardId, groupName) {
   });
 }
 
+let moveNoteCardsResponsively = function() {
+  let ungroupedCards = Cards.find({groupId: ''}); //all ungrouped cards
+  ungroupedCards.forEach(function(card) {
+    Modules.client.moveThing(document.getElementById(card._id),card.locationX*Session.get('clientWidth'), card.locationY*Session.get('clientHeight'));
+  });
+}
+
+Modules.client.moveNoteCardsResponsively = moveNoteCardsResponsively;
 Modules.client.initializeCardSizes = initializeCardSizes;
 Modules.client.drawNoteCard = drawNoteCard;
 Modules.client.splitNoteCard = splitNoteCard;
