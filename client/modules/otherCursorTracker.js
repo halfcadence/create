@@ -1,5 +1,5 @@
 //start tracking cursors
-let startOtherCursorTracker = () => {
+let startOtherCursorTracker = function() {
   //track cursors MongoDB
   let cursors = Cursors.find();
   let cursorHandle = cursors.observeChanges({
@@ -14,26 +14,14 @@ let startOtherCursorTracker = () => {
       mouseCursor.id = id;
     },
     changed: function(id, fields) {
-      if (Modules.client.getCursorId() == id) //if it's our cursor
-        return;
-
-      moveThing(document.getElementById(id),fields.locationX, fields.locationY);
+      if (Modules.client.getCursorId() !== id) //if it's not our cursor
+        Modules.client.moveThing(document.getElementById(id),fields.locationX, fields.locationY);
     },
     removed: function (id) {
-      if (Modules.client.getCursorId() == id) //if it's our cursor
-        return;
-
-      removeThing(document.getElementById(id));
+      if (Modules.client.getCursorId() !== id) //if it's not our cursor
+        $(document.getElementById(id)).remove();
     }
   });
-};
-
-let moveThing = function(thing,x,y){
-  $(thing).animate({ top: y - 15, left: x - 15}, "fast", 'linear', {queue: false});
-};
-
-let removeThing = function(thing){
-   $(thing).remove();
 };
 
 Modules.client.startOtherCursorTracker = startOtherCursorTracker;

@@ -1,24 +1,20 @@
 let cursorId;
-let moved = false;
+let defaultMouseX = -1;
+let defaultMouseY = -1;
+
 let startCursorTracker = () => {
-  let mouseX = -100;
-  let mouseY = -100;
-
-  insertCursor(mouseX,mouseY);
-
-  setInterval(function () { //update position on interval
-    setPosition(cursorId, mouseX,mouseY);
-  }, 200);
+  insertCursor(defaultMouseX,defaultMouseY);
 
   $(document).on('mousemove', function(e){ //track mouse position
-    mouseX = e.pageX;
-    mouseY = e.pageY;
-    moved = true;
+    if (cursorId)
+      //set mouse position in database
+      Meteor.call("setCursorPosition", cursorId, e.pageX, e.pageY, Modules.client.getProjectId(),Modules.client.getUserColor());
   });
 
   Modules.client.startOtherCursorTracker(); //track other mice
 };
 
+//insert mouse object in database
 let insertCursor = function(mouseX, mouseY) {
   cursorId = Cursors.insert({
   projectId: Modules.client.getProjectId(),
@@ -28,15 +24,9 @@ let insertCursor = function(mouseX, mouseY) {
   });
 }
 
-let setPosition = function(cursorId, x, y){
-  if (!moved || !cursorId) return; //if cursor hasn't moved or cursorid hasn't been set
-  Meteor.call("setCursorPosition", cursorId, x, y, Modules.client.getProjectId(),Modules.client.getUserColor());
-  moved = false;
-};
-
-let _getCursorId = function() {
+let getCursorId = function() {
   return cursorId;
 }
 
 Modules.client.startCursorTracker = startCursorTracker;
-Modules.client.getCursorId = _getCursorId;
+Modules.client.getCursorId = getCursorId;
