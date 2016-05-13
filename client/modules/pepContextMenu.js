@@ -4,6 +4,8 @@ let contextMenuClassName;
 let contextMenuItemClassName;
 let contextMenuLinkClassName;
 let contextMenuActive;
+let numDefaultMenuItems = 2;
+let numExtraMenuItems = 2;
 
 let taskItemClassName;
 let taskItemInContext;
@@ -28,8 +30,8 @@ let windowHeight;
 let startContextMenu = function() {
   initializeVariables();
   //remove extra menu items
-  $(menuItems[3]).remove();
-  $(menuItems[4]).remove();
+  $(menuItems[numDefaultMenuItems]).remove();
+  $(menuItems[numDefaultMenuItems+1]).remove();
   contextListener();
   clickListener();
   keyupListener();
@@ -219,12 +221,11 @@ let turnMergeMenuOff = function() {
   if (!mergeMenuOn)
     return;
   //remove current list items
-  $(menuItems[3]).remove();
-  $(menuItems[4]).remove();
+  for (let i = numDefaultMenuItems; i < numDefaultMenuItems + numExtraMenuItems; i++)
+    $(menuItems[i]).remove();
   //add new list items
-  $(menu).append(menuItems[0]);
-  $(menu).append(menuItems[1]);
-  $(menu).append(menuItems[2]);
+  for (let i = 0 ; i < numDefaultMenuItems; i++)
+    $(menu).append(menuItems[i]);
   mergeMenuOn = false;
 }
 
@@ -232,12 +233,11 @@ let turnMergeMenuOn = function() {
   if (mergeMenuOn)
     return;
   //remove current list items
-  $(menuItems[0]).remove();
-  $(menuItems[1]).remove();
-  $(menuItems[2]).remove();
+  for (let i = 0 ; i < numDefaultMenuItems; i++)
+    $(menuItems[i]).remove();
   //add new list items
-  $(menu).append(menuItems[3]);
-  $(menu).append(menuItems[4]);
+  for (let i = numDefaultMenuItems; i < numDefaultMenuItems + numExtraMenuItems; i++)
+    $(menu).append(menuItems[i]);
   mergeMenuOn = true;
 }
 
