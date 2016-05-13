@@ -76,6 +76,7 @@
     box-sizing: border-box;
     top: calc(-200% / 3);
     left: 100%;
+    transition: all .1s;
     padding: $sf *20px $sf *30px $sf *20px $sf *30px;
     font-size: $sf *2.5em;
     font-weight: $sf *100;
