@@ -3,7 +3,7 @@ let moveThing = function(thing,x,y){
    let position = {};
    position.left = x;
    position.top = y;
-   $(thing).offset(position);
+   $(thing).stop().offset(position);
    console.log("moving thing to " + x + ", " + y);
 };
 

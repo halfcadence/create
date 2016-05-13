@@ -15,7 +15,7 @@ let startOtherCursorTracker = function() {
     },
     changed: function(id, fields) {
       if (Modules.client.getCursorId() !== id) //if it's not our cursor
-        Modules.client.moveThing(document.getElementById(id),fields.locationX, fields.locationY);
+        Modules.client.moveThing(document.getElementById(id),getHorizontalScaledLocation(fields.locationX), getVerticalScaledLocation(fields.locationY));
     },
     removed: function (id) {
       if (Modules.client.getCursorId() !== id) //if it's not our cursor
@@ -23,5 +23,13 @@ let startOtherCursorTracker = function() {
     }
   });
 };
+
+let getHorizontalScaledLocation = function(locationX) {
+  return locationX * Session.get('clientWidth');
+}
+
+let getVerticalScaledLocation = function(locationY) {
+  return locationY * Session.get('clientHeight');
+}
 
 Modules.client.startOtherCursorTracker = startOtherCursorTracker;
