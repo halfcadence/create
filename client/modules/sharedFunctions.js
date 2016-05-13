@@ -7,7 +7,6 @@ let moveThing = function(thing,x,y){
    //but it had the side effect of canceling genie effect animations and stuff
    //leaving cards at size 0
    $(thing).offset(position);
-   console.log("moving thing to " + x + ", " + y);
 };
 
 

@@ -6,7 +6,7 @@ let startCursorTracker = () => {
   insertCursor(defaultMouseX,defaultMouseY);
 
   $(document).on('mousemove', function(e){ //track mouse position
-    if (cursorId)
+    if (cursorId && Modules.client.getUserColor()) //if we have an user id and color
       Meteor.call("setCursorPosition", cursorId, getHorizontalPercentage(e.pageX), getVerticalPercentage(e.pageY), Modules.client.getProjectId(),Modules.client.getUserColor());
   });
 

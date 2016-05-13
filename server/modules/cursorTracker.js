@@ -15,6 +15,6 @@ Meteor.methods({
 
 //clear cursors which haven't been updated recently
 Meteor.setInterval(function () {
-  let fiveSecondsAgo = Date.now() - 1000 * 5;
-  Cursors.remove({updatedAt:{$lt:fiveSecondsAgo}});
+  let fiveSecondsAgo = Date.now() - 1000 * 4;
+  Cursors.remove({updatedAt:{$lt:fiveSecondsAgo}}); //earlier time than 5s ago
 }, 5000);

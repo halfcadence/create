@@ -1,6 +1,6 @@
 .cursorCircle{
   background:$dark-card-color;
-  transition: opacity .1s;
+  transition: opacity .1s left .1s top .1s;
   width: $sf *40px;
   height: $sf *40px;
   border-radius: 50%;

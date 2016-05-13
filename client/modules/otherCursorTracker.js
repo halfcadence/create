@@ -32,4 +32,16 @@ let getVerticalScaledLocation = function(locationY) {
   return locationY * Session.get('clientHeight');
 }
 
+
+let moveCursorsResponsively = function() {
+  let cursors = Cursors.find({cursorId: {$not: Modules.client.getCursorId()}}); //all ungrouped cards
+  cursors.forEach(function(cursor) {
+
+    console.log("moving cursor with id " + cursor._id + " to " + cursor.locationX*Session.get('clientWidth'), cursor.locationY + ", " + cursor.locationY*Session.get('clientHeight'));
+
+    Modules.client.moveThing(document.getElementById(cursor._id),cursor.locationX*Session.get('clientWidth'), cursor.locationY*Session.get('clientHeight'));
+  });
+}
+
+Modules.client.moveCursorsResponsively = moveCursorsResponsively;
 Modules.client.startOtherCursorTracker = startOtherCursorTracker;
