@@ -1,12 +1,13 @@
 .cursorCircle{
-  background: none;
-  border-style: solid;
-  border-width: $sf *30px $sf *30px 0 0;
-  border-color: #FFEC64 transparent transparent transparent;
-  height: 0; width: 0;
+  background:$dark-card-color;
+  transition: opacity .1s;
+  width: $sf *40px;
+  height: $sf *40px;
+  border-radius: 50%;
   position: absolute;
-  top: $sf *-100px;
-  left: $sf *-100px;
+  opacity: .6;
+  top: -100px;
+  left: -100px;
   z-index:1000000;
   pointer-events:none;
 }

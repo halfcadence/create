@@ -10,7 +10,7 @@ let startOtherCursorTracker = function() {
       let mouseCursor = document.createElement("div");
       mouseCursor.classList.add("cursorCircle");
       document.body.appendChild(mouseCursor);
-      $(mouseCursor).css("border-color", fields.color + " transparent transparent transparent");
+      $(mouseCursor).css("background", fields.color);
       mouseCursor.id = id;
     },
     changed: function(id, fields) {
