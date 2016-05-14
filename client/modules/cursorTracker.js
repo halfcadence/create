@@ -7,7 +7,7 @@ let startCursorTracker = () => {
 
   $(document).on('mousemove', function(e){ //track mouse position
     if (cursorId && Modules.client.getUserColor()) //if we have an user id and color
-      Meteor.call("setCursorPosition", cursorId, getHorizontalPercentage(e.pageX), getVerticalPercentage(e.pageY), Modules.client.getProjectId(),Modules.client.getUserColor());
+      Meteor.call("setCursorPosition", cursorId, Modules.client.getHorizontalPercentage(e.pageX), Modules.client.getVerticalPercentage(e.pageY), Modules.client.getProjectId(),Modules.client.getUserColor());
   });
 
   Modules.client.startOtherCursorTracker(); //track other mice
@@ -17,18 +17,10 @@ let startCursorTracker = () => {
 let insertCursor = function(mouseX, mouseY) {
   cursorId = Cursors.insert({
   projectId: Modules.client.getProjectId(),
-  locationX: getHorizontalPercentage(mouseX),
-  locationY: getVerticalPercentage(mouseY),
+  locationX: Modules.client.getHorizontalPercentage(mouseX),
+  locationY: Modules.client.getVerticalPercentage(mouseY),
   color: Modules.client.getUserColor()
   });
-}
-
-let getHorizontalPercentage = function(locationX) {
-  return locationX/Session.get('clientWidth');
-}
-
-let getVerticalPercentage = function(locationY) {
-  return locationY/Session.get('clientHeight');
 }
 
 let getCursorId = function() {

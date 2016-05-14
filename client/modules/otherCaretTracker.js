@@ -9,33 +9,22 @@ let startOtherCaretTracker = () => {
 
       let arguments = {};
       arguments.color = fields.color;
-      arguments.left = fields.locationX;
-      arguments.top = fields.locationY;
+      arguments.left = Modules.client.getHorizontalScaledLocation(fields.locationX);
+      arguments.top = Modules.client.getVerticalScaledLocation(fields.locationY);
       let caret = Modules.client.drawCaret(arguments);
       caret.id = id;
     },
     changed: function(id, fields) {
-      if (Modules.client.getCaretId() == id) //if it's our caret
-        return;
-
-      moveThing(document.getElementById(id),fields.locationX, fields.locationY);
+      if (Modules.client.getCaretId() !== id) //if it's not our caret
+        Modules.client.moveThing(document.getElementById(id),Modules.client.getHorizontalScaledLocation(fields.locationX), Modules.client.getVerticalScaledLocation(fields.locationY));
     },
     removed: function (id) {
       if (Modules.client.getCaretId() == id) //if it's our caret
         return;
 
-      removeThing(document.getElementById(id));
+        $(document.getElementById(id)).remove();
     }
   });
-};
-
-let moveThing = function(thing,x,y){
-  thing.style.top = y + 'px';
-  thing.style.left = x + 'px';
-};
-
-let removeThing = function(thing){
-   $(thing).remove();
 };
 
 Modules.client.startOtherCaretTracker = startOtherCaretTracker;

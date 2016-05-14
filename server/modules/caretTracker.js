@@ -17,6 +17,6 @@ Meteor.methods({
 Meteor.setInterval(function () {
   //let twoMinutesAgo = Date.now() - 1000 * 60 * 2;
   //Carets.remove({updatedAt:{$lt:twoMinutesAgo}});
-  let tenSecondsAgo = Date.now() - 1000 * 10;
-  Carets.remove({updatedAt:{$lt:tenSecondsAgo}});
+  let fourSecondsAgo = Date.now() - 1000 * 4;
+  Carets.remove({updatedAt:{$lt:fourSecondsAgo}});
 }, 5000);

@@ -15,5 +15,25 @@ let setZIndex = function(thing, index){
    $(thing).css('z-index', index);
 };
 
+//turns a pixel location into a percentage
+let getHorizontalPercentage = function(locationX) {
+  return locationX/Session.get('clientWidth');
+}
+let getVerticalPercentage = function(locationY) {
+  return locationY/Session.get('clientHeight');
+}
+
+//turns a percentage location into pixels
+let getHorizontalScaledLocation = function(locationX) {
+  return locationX * Session.get('clientWidth');
+}
+let getVerticalScaledLocation = function(locationY) {
+  return locationY * Session.get('clientHeight');
+}
+
+Modules.client.getHorizontalPercentage = getHorizontalPercentage;
+Modules.client.getVerticalPercentage = getVerticalPercentage;
+Modules.client.getHorizontalScaledLocation = getHorizontalScaledLocation;
+Modules.client.getVerticalScaledLocation = getVerticalScaledLocation;
 Modules.client.setZIndex = setZIndex;
 Modules.client.moveThing = moveThing;

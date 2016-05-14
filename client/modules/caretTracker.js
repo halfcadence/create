@@ -7,7 +7,7 @@ let caretId;
 let startCaretTracker = function () {
   if (caret) throw "trying to make caret, caret already exists";
   //insert caret to DB
-  insertCaret(-1000, -1000);
+  insertCaret(-1, -1);
 
   //interpret events on text boxes
   $(document).on('focus click keyup scroll', '.titleText, .bodyText, .bodyText2, .cost, .priority', function(){
@@ -15,7 +15,7 @@ let startCaretTracker = function () {
     let top = $(this).offset().top + coordinates.top;
     let left = $(this).offset().left + coordinates.left;
     moveCaret(top,left);
-    $(this).css('border', '2px solid ' + Modules.client.getUserColor()); //add border
+    $(this).css('border', 2*Session.get('scaleFactor') +'px solid ' + Modules.client.getUserColor()); //add border
   });
   Modules.client.startOtherCaretTracker();
 
@@ -25,6 +25,7 @@ let startCaretTracker = function () {
   });
 }
 
+//draws a caret given pixel location
 let drawCaret = function(args) {
   let arguments = args || {};
   let caret = document.createElement('div');
@@ -34,16 +35,20 @@ let drawCaret = function(args) {
   caret.style.zIndex = 5000;
   caret.style.height = Session.get("scaleFactor")*50 + 'px';
   caret.style.width = Session.get("scaleFactor")*3 + 'px';
-  caret.style.top = arguments.top + 'px'|| '-1000px';
-  caret.style.left = arguments.left + 'px' || '-1000px';
+  caret.style.left = arguments.left + 'px' || '-1px';
+  caret.style.top = arguments.top + 'px' || '-1px';
   return caret;
 }
 
-//make that bootiful caret move its bootiful booty
+//sets a caret's database position
+//arguments are pixel location
 let moveCaret = function (top,left) {
-  Meteor.call("setCaretPosition", caretId, left, top, Modules.client.getProjectId(),Modules.client.getUserColor());
+  let scaledLeft = Modules.client.getHorizontalPercentage(left);
+  let scaledTop = Modules.client.getVerticalPercentage(top);
+  Meteor.call("setCaretPosition", caretId, scaledLeft, scaledTop, Modules.client.getProjectId(),Modules.client.getUserColor());
 };
 
+//inserts a caret into the database at location x, y
 let insertCaret = function(x, y) {
   caretId = Carets.insert({
   projectId: Modules.client.getProjectId(),
