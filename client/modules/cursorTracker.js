@@ -17,8 +17,8 @@ let startCursorTracker = () => {
 let insertCursor = function(mouseX, mouseY) {
   cursorId = Cursors.insert({
   projectId: Modules.client.getProjectId(),
-  locationX: Modules.client.getHorizontalPercentage(mouseX),
-  locationY: Modules.client.getVerticalPercentage(mouseY),
+  locationX: Modules.client.getHorizontalScaledLocation(mouseX),
+  locationY: Modules.client.getVerticalScaledLocation(mouseY),
   color: Modules.client.getUserColor()
   });
 }
