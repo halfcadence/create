@@ -329,7 +329,7 @@ Notecard.prototype = {
         $set: {position : "right"}
       });
     } else if (direction === "right") {
-      $(this.implementation).css('left', scaleFactor*500);
+      $(this.implementation).css('left', '100%');
       this.position = "left"; //left element showing
 
       //hide right triangle so it doesn't obscure text
