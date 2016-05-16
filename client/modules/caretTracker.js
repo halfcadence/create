@@ -7,14 +7,20 @@ let caretId;
 let startCaretTracker = function () {
   if (caret) throw "trying to make caret, caret already exists";
   //insert caret to DB
-  insertCaret(-1, -1);
+  insertCaret(0,0,-1, -1);
 
   //interpret events on text boxes
   $(document).on('focus click keyup scroll', '.titleText, .bodyText, .bodyText2, .cost, .priority', function(){
-    let coordinates = $(this).caret('position');
-    let top = $(this).offset().top + coordinates.top;
-    let left = $(this).offset().left + coordinates.left;
-    moveCaret(top,left);
+    //position of caret inside element
+    let left = $(this).caret('position').left;
+    let top = $(this).caret('position').top;
+
+    //position of element
+    let elementLeft = $(this).offset().left;
+    let elementTop = $(this).offset().top;
+
+    moveCaret(left,top, elementLeft, elementTop);
+    console.log('on text box event: moving caret to ' + left + ", " + top + ", " + elementLeft + ", " + elementTop);
     $(this).css('border', 2*Session.get('scaleFactor') +'px solid ' + Modules.client.getUserColor()); //add border
   });
   Modules.client.startOtherCaretTracker();
@@ -41,19 +47,27 @@ let drawCaret = function(args) {
 }
 
 //sets a caret's database position
-//arguments are pixel location
-let moveCaret = function (top,left) {
-  let scaledLeft = Modules.client.getHorizontalPercentage(left);
-  let scaledTop = Modules.client.getVerticalPercentage(top);
-  Meteor.call("setCaretPosition", caretId, scaledLeft, scaledTop, Modules.client.getProjectId(),Modules.client.getUserColor());
+//@top, @left location of the caret in the element
+//@elementTop, @elementLeft location of the element in the document
+let moveCaret = function (left,top, elementLeft, elementTop) {
+  let scaledLeft = left/Session.get('scaleFactor');
+  let scaledElementLeft = Modules.client.getHorizontalPercentage(elementLeft);
+  let scaledTop = top/Session.get('scaleFactor');
+  let scaledElementTop = Modules.client.getVerticalPercentage(elementTop);
+  console.log('scaled position to ' + scaledLeft + ", " + scaledTop + ", " + scaledElementLeft + ", " + scaledElementTop);
+  Meteor.call("setCaretPosition", caretId, scaledLeft, scaledTop, scaledElementLeft, scaledElementTop, Modules.client.getProjectId(),Modules.client.getUserColor());
 };
 
-//inserts a caret into the database at location x, y
-let insertCaret = function(x, y) {
+//inserts a caret into the database
+//@x, @y location of the caret in the elementTop
+//@elementX, @elementY location of the element in the document
+let insertCaret = function(x, y, elementX, elementY) {
   caretId = Carets.insert({
   projectId: Modules.client.getProjectId(),
   locationX: x,
   locationY: y,
+  elementX: elementX,
+  elementY: elementY,
   updatedAt: Date.now(),
   color: Modules.client.getUserColor()
   });
