@@ -3,6 +3,14 @@ Carets = new Mongo.Collection("carets");
 let caret;
 let caretId;
 
+//distances from top of pep to other parts of it
+let yDistanceToBody = 100;
+let yDistanceToCost = 10;
+let yDistanceToPriority = 55;
+let xDistanceToCost = 500 - 50 - 12;
+let xDistanceToPriority = xDistanceToCost;
+
+
 //track the user's cursor
 let startCaretTracker = function () {
   if (caret) throw "trying to make caret, caret already exists";
@@ -11,16 +19,54 @@ let startCaretTracker = function () {
 
   //interpret events on text boxes
   $(document).on('focus click keyup scroll', '.titleText, .bodyText, .bodyText2, .cost, .priority', function(){
+
+    console.log(this.className);
+
     //position of caret inside element
     let left = $(this).caret('position').left;
     let top = $(this).caret('position').top;
-
     //position of element
     let elementLeft = $(this).offset().left;
     let elementTop = $(this).offset().top;
 
-    moveCaret(left,top, elementLeft, elementTop);
-    console.log('on text box event: moving caret to ' + left + ", " + top + ", " + elementLeft + ", " + elementTop);
+    //set elementLeft, elementTop to left corner of pep
+    //set left, top to location relative to pep
+    switch(this.className) {
+      case 'titleText':
+        break;
+      case 'bodyText':
+        scaledTitleHeight = yDistanceToBody*Session.get('scaleFactor');
+        elementTop -= scaledTitleHeight;
+        top += scaledTitleHeight;
+        break;
+      case 'bodyText2':
+        scaledTitleHeight = yDistanceToBody*Session.get('scaleFactor');
+        elementTop -= scaledTitleHeight;
+        top += scaledTitleHeight;
+        break;
+      case 'cost':
+        elementLeft -= xDistanceToCost*Session.get('scaleFactor');
+        elementTop -= yDistanceToCost*Session.get('scaleFactor');
+        left += xDistanceToCost*Session.get('scaleFactor');
+        top += yDistanceToCost*Session.get('scaleFactor');
+        break;
+      case 'priority':
+        elementLeft -= xDistanceToPriority*Session.get('scaleFactor');
+        elementTop -= yDistanceToPriority*Session.get('scaleFactor');
+        left += xDistanceToPriority*Session.get('scaleFactor');
+        top += yDistanceToPriority*Session.get('scaleFactor');
+        break;
+      default:
+        break;
+    }
+
+    //scaled positions
+    let scaledLeft = left/Session.get('scaleFactor');
+    let scaledElementLeft = Modules.client.getHorizontalPercentage(elementLeft);
+    let scaledTop = top/Session.get('scaleFactor');
+    let scaledElementTop = Modules.client.getVerticalPercentage(elementTop);
+
+    setCaretPosition(scaledLeft, scaledTop, scaledElementLeft, scaledElementTop);
     $(this).css('border', 2*Session.get('scaleFactor') +'px solid ' + Modules.client.getUserColor()); //add border
   });
   Modules.client.startOtherCaretTracker();
@@ -49,13 +95,8 @@ let drawCaret = function(args) {
 //sets a caret's database position
 //@top, @left location of the caret in the element
 //@elementTop, @elementLeft location of the element in the document
-let moveCaret = function (left,top, elementLeft, elementTop) {
-  let scaledLeft = left/Session.get('scaleFactor');
-  let scaledElementLeft = Modules.client.getHorizontalPercentage(elementLeft);
-  let scaledTop = top/Session.get('scaleFactor');
-  let scaledElementTop = Modules.client.getVerticalPercentage(elementTop);
-  console.log('scaled position to ' + scaledLeft + ", " + scaledTop + ", " + scaledElementLeft + ", " + scaledElementTop);
-  Meteor.call("setCaretPosition", caretId, scaledLeft, scaledTop, scaledElementLeft, scaledElementTop, Modules.client.getProjectId(),Modules.client.getUserColor());
+let setCaretPosition = function (left,top, elementLeft, elementTop) {
+  Meteor.call("setCaretPosition", caretId, left, top, elementLeft, elementTop, Modules.client.getProjectId(),Modules.client.getUserColor());
 };
 
 //inserts a caret into the database
@@ -79,5 +120,5 @@ let getCaretId = function() {
 
 Modules.client.drawCaret = drawCaret;
 Modules.client.startCaretTracker = startCaretTracker;
-Modules.client.moveCaret = moveCaret;
+Modules.client.setCaretPosition = setCaretPosition;
 Modules.client.getCaretId = getCaretId;

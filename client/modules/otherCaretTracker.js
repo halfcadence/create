@@ -42,4 +42,13 @@ let moveCaret = function(caret, x, y, elementX, elementY) {
   Modules.client.moveThing(caret,left, top);
 }
 
+let moveCaretsResponsively = function() {
+  let carets = Carets.find(); //all carets
+  carets.forEach(function(caret) {
+    moveCaret(document.getElementById(caret._id),caret.locationX,caret.locationY,caret.elementX, caret.elementY);
+  });
+}
+
+Modules.client.moveCaretsResponsively = moveCaretsResponsively;
+Modules.client.moveCaret = moveCaret;
 Modules.client.startOtherCaretTracker = startOtherCaretTracker;

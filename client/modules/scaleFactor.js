@@ -25,6 +25,7 @@ let resize = function() {
   Session.set('clientHeight',document.documentElement.clientHeight); //viewport width
   Modules.client.moveNoteCardsResponsively();
   Modules.client.moveCursorsResponsively();
+  Modules.client.moveCaretsResponsively();
 };
 
 Modules.client.getScaleFactor = function() { return scaleFactor};

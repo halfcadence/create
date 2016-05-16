@@ -357,7 +357,7 @@ Notecard.prototype = {
 $(document).on('click', function(event) {
   if (!$(event.target).closest('.pep').length) {//if the target was not a pep
     disableCurrentEnabled();
-    Modules.client.moveCaret(-100,-100); //remove caret
+    Modules.client.moveCaret(-1,-1,-1,-1); //remove caret
   }
 });
 
