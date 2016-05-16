@@ -35,6 +35,9 @@ let startOtherCaretTracker = () => {
 
 //moves a caret to a certain location, interpreting the element location
 let moveCaret = function(caret, x, y, elementX, elementY) {
+  if (x === undefined || y === undefined || elementX === undefined || elementY === undefined)
+    return;
+    
   console.log('move command goes to ' + Session.get('scaleFactor')*x + ", " + Session.get('scaleFactor')*y + ", " + Modules.client.getHorizontalScaledLocation(elementX) + ", " + Modules.client.getVerticalScaledLocation(elementY) );
   let left = Modules.client.getHorizontalScaledLocation(elementX) + Session.get('scaleFactor')*x;
   let top = Modules.client.getVerticalScaledLocation(elementY) + Session.get('scaleFactor')*y;
